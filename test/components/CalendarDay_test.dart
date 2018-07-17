@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jetbooking/components/AppTheme.dart';
-import 'package:jetbooking/components/CalendaryDay.dart';
+import 'package:jetbooking/components/CalendarDay.dart';
 
 void main() {
   testWidgets('should create widget', (WidgetTester tester) async {

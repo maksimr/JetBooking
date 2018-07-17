@@ -74,21 +74,7 @@ class Calendar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Hero(
-              tag: date.month,
-              child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  return Text(
-                    DateFormat.MMMM().format(date),
-                    textAlign: TextAlign.right,
-                    style: Theme.of(context).textTheme.headline,
-                  );
-                },
-              ),
-            ),
-          ),
+          _buildMonthTitle(date),
           CalendarMonth(
             date: date,
             dayBuilder: (BuildContext context, DateTime date) {
@@ -100,6 +86,24 @@ class Calendar extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  _buildMonthTitle(DateTime date) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: Hero(
+        tag: date.month,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return Text(
+              DateFormat.MMMM().format(date),
+              textAlign: TextAlign.right,
+              style: Theme.of(context).textTheme.headline,
+            );
+          },
+        ),
       ),
     );
   }

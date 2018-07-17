@@ -52,6 +52,6 @@ class CalendarMonth extends StatelessWidget {
   }
 
   Widget _buildWeekDay(context, DateTime date) {
-    return dayBuilder(context, date);
+    return Expanded(child: dayBuilder(context, date));
   }
 }

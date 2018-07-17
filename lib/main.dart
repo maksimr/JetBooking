@@ -17,12 +17,10 @@ class App extends StatelessWidget {
           child: CalendarMonth(
             date: selectedDate,
             dayBuilder: (BuildContext context, DateTime date) {
-              return Expanded(
-                child: CalendarDay(
-                  selected: date == selectedDate,
-                  onTap: (date) => print(date),
-                  date: date,
-                ),
+              return CalendarDay(
+                selected: date == selectedDate,
+                onTap: (date) => print(date),
+                date: date,
               );
             },
           ),

@@ -21,17 +21,24 @@ class CalendarDay extends StatelessWidget {
           color: selected ? mTheme.accentColor : null,
           shape: BoxShape.circle,
         ),
-        child: InkWell(
-          onTap: () => onTap(date),
-          child: Center(
-            child: Text(
-              "${date?.day ?? ''}",
-              style: TextStyle(
-                color: _dateColor(context),
-                fontSize: 20.0,
-              ),
-            ),
-          ),
+        child: _buildInk(context),
+      ),
+    );
+  }
+
+  Widget _buildInk(BuildContext context) {
+    return onTap != null && date != null
+        ? InkWell(onTap: () => onTap(date), child: _buildContent(context))
+        : _buildContent(context);
+  }
+
+  Center _buildContent(BuildContext context) {
+    return Center(
+      child: Text(
+        "${date?.day ?? ''}",
+        style: TextStyle(
+          color: _dateColor(context),
+          fontSize: 20.0,
         ),
       ),
     );

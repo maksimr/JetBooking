@@ -32,6 +32,33 @@ void main() {
       getTheme(tester, dayWidget).accentColor,
     );
   });
+
+  testWidgets('should call handler on user tap', (WidgetTester tester) async {
+    bool isTapped = false;
+    final date = DateTime.now();
+    final dayWidget = CalendarDay(
+      date: date,
+      onTap: (_) => isTapped = true,
+    );
+
+    await tester.pumpWidget(App(child: dayWidget));
+    await tester.tap(find.byType(CalendarDay));
+
+    expect(isTapped, equals(true));
+  });
+
+  testWidgets('should not allow tap if we do not pass date',
+      (WidgetTester tester) async {
+    bool isTapped = false;
+    final dayWidget = CalendarDay(
+      onTap: (_) => isTapped = true,
+    );
+
+    await tester.pumpWidget(App(child: dayWidget));
+    await tester.tap(find.byType(CalendarDay));
+
+    expect(isTapped, equals(false));
+  });
 }
 
 createDayContainerFinder(dayWidget) {

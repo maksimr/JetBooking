@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class App extends StatelessWidget {
+class AppTheme extends StatelessWidget {
   final Widget child;
 
-  const App({Key key, this.child}) : super(key: key);
+  const AppTheme({Key key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

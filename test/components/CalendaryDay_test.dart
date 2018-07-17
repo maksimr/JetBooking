@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jetbooking/components/App.dart';
+import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/CalendaryDay.dart';
 
 void main() {
   testWidgets('should create widget', (WidgetTester tester) async {
-    await tester.pumpWidget(App(child: CalendarDay()));
+    await tester.pumpWidget(AppTheme(child: CalendarDay()));
   });
 
   testWidgets('should render passed day', (WidgetTester tester) async {
     final date = DateTime.now();
     final dayWidget = CalendarDay(date: date);
 
-    await tester.pumpWidget(App(child: dayWidget));
+    await tester.pumpWidget(AppTheme(child: dayWidget));
 
     expect(find.text('${date.day}'), findsOneWidget);
     checkDayWidgetColor(tester, dayWidget, null);
@@ -25,7 +25,7 @@ void main() {
       selected: true,
     );
 
-    await tester.pumpWidget(App(child: dayWidget));
+    await tester.pumpWidget(AppTheme(child: dayWidget));
     checkDayWidgetColor(
       tester,
       dayWidget,
@@ -41,7 +41,7 @@ void main() {
       onTap: (_) => isTapped = true,
     );
 
-    await tester.pumpWidget(App(child: dayWidget));
+    await tester.pumpWidget(AppTheme(child: dayWidget));
     await tester.tap(find.byType(CalendarDay));
 
     expect(isTapped, equals(true));
@@ -54,7 +54,7 @@ void main() {
       onTap: (_) => isTapped = true,
     );
 
-    await tester.pumpWidget(App(child: dayWidget));
+    await tester.pumpWidget(AppTheme(child: dayWidget));
     await tester.tap(find.byType(CalendarDay));
 
     expect(isTapped, equals(false));

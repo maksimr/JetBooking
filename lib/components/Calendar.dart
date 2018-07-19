@@ -6,6 +6,8 @@ import 'package:jetbooking/components/CalendarMonth.dart';
 class Calendar extends StatelessWidget {
   final DateTime date;
   final Function(DateTime) onTap;
+  final toolbarKey = UniqueKey();
+  final calendarKey = UniqueKey();
 
   Calendar({date, this.onTap}) : date = date ?? DateTime.now();
 
@@ -15,15 +17,16 @@ class Calendar extends StatelessWidget {
       padding: MediaQuery.of(context).padding,
       child: Stack(
         children: <Widget>[
-          _buildListView(),
+          _buildCalendar(),
           _buildToolbar(context),
         ],
       ),
     );
   }
 
-  ListView _buildListView() {
+  _buildCalendar() {
     return ListView(
+      key: calendarKey,
       padding: EdgeInsets.only(top: 40.0),
       children: List.generate((12 - date.month) + 1, (monthIndex) {
         return _buildMonth(
@@ -37,6 +40,7 @@ class Calendar extends StatelessWidget {
     final mTheme = Theme.of(context);
 
     return Container(
+      key: toolbarKey,
       color: mTheme.accentColor,
       child: Padding(
         padding: EdgeInsets.only(left: 20.0, right: 20.0),

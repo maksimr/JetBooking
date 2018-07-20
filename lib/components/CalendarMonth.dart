@@ -10,7 +10,9 @@ class CalendarMonth extends StatelessWidget {
   CalendarMonth({
     @required this.date,
     @required this.dayBuilder,
-  }) : weeksList = _generateWeeks(date);
+    Key key,
+  })  : weeksList = _generateWeeks(date),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -4,9 +4,9 @@ class CalendarDay extends StatelessWidget {
   final DateTime date;
   final Function(DateTime) onTap;
   final bool selected;
-  final containerKey = UniqueKey();
 
-  CalendarDay({this.date, this.onTap, this.selected = false});
+  CalendarDay({this.date, this.onTap, this.selected = false, Key key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,6 @@ class CalendarDay extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 17.0),
       child: Container(
-        key: containerKey,
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: selected ? mTheme.accentColor : null,

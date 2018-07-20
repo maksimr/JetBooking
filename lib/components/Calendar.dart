@@ -9,7 +9,9 @@ class Calendar extends StatelessWidget {
   final toolbarKey = UniqueKey();
   final calendarKey = UniqueKey();
 
-  Calendar({date, this.onTap}) : date = date ?? DateTime.now();
+  Calendar({date, this.onTap, Key key})
+      : date = date ?? DateTime.now(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

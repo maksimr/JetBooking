@@ -62,7 +62,7 @@ void main() {
 }
 
 createDayContainerFinder(dayWidget) {
-  return find.byKey(dayWidget.containerKey);
+  return find.byType(Container);
 }
 
 getTheme(WidgetTester tester, CalendarDay dayWidget) =>

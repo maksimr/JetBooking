@@ -24,31 +24,31 @@ void main() {
 
   testWidgets('should render start date item', (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
-    await tester.pumpWidget(AppTheme(
-      child: DetailsScreen(date: date),
-    ));
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
 
-    final item = find.ancestor(
-      of: find.text("Starts"),
-      matching: find.byType(ListTile),
-    );
-
-    expect(find.descendant(of: item, matching: find.text("11:30")),
-        findsOneWidget);
+    expectFindOneItemWidget("Starts", "11:30");
   });
 
   testWidgets('should render end date item', (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
-    await tester.pumpWidget(AppTheme(
-      child: DetailsScreen(date: date),
-    ));
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
 
-    final item = find.ancestor(
-      of: find.text("Ends"),
-      matching: find.byType(ListTile),
-    );
-
-    expect(find.descendant(of: item, matching: find.text("12:00")),
-        findsOneWidget);
+    expectFindOneItemWidget("Ends", "12:00");
   });
+}
+
+expectFindOneItemWidget(text, value) {
+  expect(
+      find.descendant(
+        of: findItemByText(text),
+        matching: find.text(value),
+      ),
+      findsOneWidget);
+}
+
+findItemByText(text) {
+  return find.ancestor(
+    of: find.text(text),
+    matching: find.byType(ListTile),
+  );
 }

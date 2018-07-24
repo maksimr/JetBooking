@@ -4,8 +4,9 @@ import 'package:jetbooking/components/WeekDay.dart';
 
 class InlineCalendar extends StatelessWidget {
   final DateTime date;
+  final Function(DateTime) onTap;
 
-  InlineCalendar({@required this.date});
+  InlineCalendar({@required this.date, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class InlineCalendar extends StatelessWidget {
             _buildWeekDayTitle(dayDate),
             Padding(padding: EdgeInsets.only(top: 8.0)),
             CalendarDay(
+              onTap: onTap,
               date: dayDate,
               selected: dayDate == date,
             ),

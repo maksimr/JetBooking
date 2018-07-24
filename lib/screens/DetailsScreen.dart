@@ -15,7 +15,9 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(DateFormat.MMMM().format(date)),
+      ),
       body: _buildBody(),
     );
   }
@@ -30,9 +32,15 @@ class DetailsScreen extends StatelessWidget {
             _buildEndsDate(),
             _buildRecurring(),
             _buildOfflineRooms(),
-          ],
+          ].map((it) => _withDivider(it)).toList(),
         ),
       ],
+    );
+  }
+
+  Widget _withDivider(child) {
+    return Column(
+      children: [child, Divider(height: 0.0)],
     );
   }
 

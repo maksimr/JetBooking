@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
 
@@ -49,6 +50,19 @@ void main() {
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
 
     expectFindOneItemWidget("Offline rooms");
+  });
+
+  testWidgets('should render month in the app bar',
+      (WidgetTester tester) async {
+    final date = DateTime.now();
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+
+    expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text(DateFormat.MMMM().format(date)),
+        ),
+        findsOneWidget);
   });
 }
 

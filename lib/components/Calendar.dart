@@ -99,17 +99,14 @@ class Calendar extends StatelessWidget {
   _buildMonthTitle(DateTime date) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
-      child: Hero(
-        tag: date.month,
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return Text(
-              DateFormat.MMMM().format(date),
-              textAlign: TextAlign.right,
-              style: Theme.of(context).textTheme.headline,
-            );
-          },
-        ),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          return Text(
+            DateFormat.MMMM().format(date),
+            textAlign: TextAlign.right,
+            style: Theme.of(context).textTheme.headline,
+          );
+        },
       ),
     );
   }

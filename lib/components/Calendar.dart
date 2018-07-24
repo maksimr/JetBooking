@@ -80,10 +80,14 @@ class Calendar extends StatelessWidget {
         title: CalendarMonthTitle(date: date),
         date: date,
         dayBuilder: (BuildContext context, DateTime date) {
-          return CalendarDay(
-            selected: _isCurrentDate(date),
-            date: date,
-            onTap: onTap,
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 17.0),
+            child: CalendarDay(
+              selected: _isCurrentDate(date),
+              fontSize: 18.0,
+              date: date,
+              onTap: onTap,
+            ),
           );
         },
       ),

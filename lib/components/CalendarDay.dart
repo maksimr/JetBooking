@@ -4,24 +4,27 @@ class CalendarDay extends StatelessWidget {
   final DateTime date;
   final Function(DateTime) onTap;
   final bool selected;
+  final double fontSize;
 
-  CalendarDay({this.date, this.onTap, this.selected = false, Key key})
-      : super(key: key);
+  CalendarDay({
+    this.date,
+    this.onTap,
+    this.selected = false,
+    this.fontSize,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final mTheme = Theme.of(context);
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 17.0),
-      child: Container(
-        padding: EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          color: selected ? mTheme.accentColor : null,
-          shape: BoxShape.circle,
-        ),
-        child: _buildInk(context),
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: selected ? mTheme.accentColor : null,
+        shape: BoxShape.circle,
       ),
+      child: _buildInk(context),
     );
   }
 
@@ -37,7 +40,7 @@ class CalendarDay extends StatelessWidget {
         "${date?.day ?? ''}",
         style: TextStyle(
           color: _dateColor(context),
-          fontSize: 20.0,
+          fontSize: fontSize,
         ),
       ),
     );

@@ -28,9 +28,31 @@ class DetailsScreen extends StatelessWidget {
           children: [
             _buildStartsDate(),
             _buildEndsDate(),
+            _buildRecurring(),
+            _buildOfflineRooms(),
           ],
         ),
       ],
+    );
+  }
+
+  _buildOfflineRooms() {
+    return AccordionPane(
+      title: Text("Offline rooms"),
+      trailing: Switch(
+        onChanged: (_) => null,
+        value: true,
+      ),
+    );
+  }
+
+  _buildRecurring() {
+    return AccordionPane(
+      title: Text("Recurring"),
+      trailing: Switch(
+        onChanged: (_) => null,
+        value: false,
+      ),
     );
   }
 

@@ -35,9 +35,29 @@ void main() {
 
     expectFindOneItemWidget("Ends", "12:00");
   });
+
+  testWidgets('should render recurring item', (WidgetTester tester) async {
+    final date = DateTime.now();
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+
+    expectFindOneItemWidget("Recurring");
+  });
+
+  testWidgets('should render offline rooms control',
+      (WidgetTester tester) async {
+    final date = DateTime.now();
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+
+    expectFindOneItemWidget("Offline rooms");
+  });
 }
 
-expectFindOneItemWidget(text, value) {
+expectFindOneItemWidget(text, [value]) {
+  if (value == null) {
+    expect(find.text(text), findsOneWidget);
+    return;
+  }
+
   expect(
       find.descendant(
         of: findItemByText(text),

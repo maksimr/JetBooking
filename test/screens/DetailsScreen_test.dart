@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/AppTheme.dart';
+import 'package:jetbooking/components/InlineCalendar.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
 
 void main() {
@@ -63,6 +64,13 @@ void main() {
           matching: find.text(DateFormat.MMMM().format(date)),
         ),
         findsOneWidget);
+  });
+
+  testWidgets('should render inline calendar', (WidgetTester tester) async {
+    final date = DateTime.now();
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+
+    expect(find.byType(InlineCalendar), findsOneWidget);
   });
 }
 

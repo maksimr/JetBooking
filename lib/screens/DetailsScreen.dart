@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/Accordion.dart';
+import 'package:jetbooking/components/InlineCalendar.dart';
 
 class DetailsScreen extends StatelessWidget {
   final DateTime date;
@@ -26,6 +27,7 @@ class DetailsScreen extends StatelessWidget {
     return Flex(
       direction: Axis.vertical,
       children: [
+        InlineCalendar(date: date),
         Accordion(
           children: [
             _buildStartsDate(),

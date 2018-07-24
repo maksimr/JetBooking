@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jetbooking/components/CalendarDay.dart';
 import 'package:jetbooking/components/CalendarMonth.dart';
+import 'package:jetbooking/components/WeekDay.dart';
 
 class Calendar extends StatelessWidget {
   final DateTime date;
@@ -55,8 +56,8 @@ class Calendar extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10.0),
                     child: Center(
-                      child: Text(
-                        _shortWeekdays[weekDayIndex].toUpperCase(),
+                      child: WeekDay(
+                        weekday: weekDayIndex + 1,
                         style: TextStyle(
                           color: mTheme.accentTextTheme.title.color,
                           fontSize: 8.0,
@@ -100,14 +101,4 @@ class Calendar extends StatelessWidget {
         date.month == _date.month &&
         date.day == _date.day);
   }
-
-  static const List<String> _shortWeekdays = const <String>[
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
-  ];
 }

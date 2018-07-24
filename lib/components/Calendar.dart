@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:jetbooking/components/CalendarDay.dart';
 import 'package:jetbooking/components/CalendarMonth.dart';
 
@@ -77,34 +76,14 @@ class Calendar extends StatelessWidget {
   _buildMonth(DateTime date) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          _buildMonthTitle(date),
-          CalendarMonth(
+      child: CalendarMonth(
+        title: CalendarMonthTitle(date: date),
+        date: date,
+        dayBuilder: (BuildContext context, DateTime date) {
+          return CalendarDay(
+            selected: _isCurrentDate(date),
             date: date,
-            dayBuilder: (BuildContext context, DateTime date) {
-              return CalendarDay(
-                selected: _isCurrentDate(date),
-                date: date,
-                onTap: onTap,
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  _buildMonthTitle(DateTime date) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return Text(
-            DateFormat.MMMM().format(date),
-            textAlign: TextAlign.right,
-            style: Theme.of(context).textTheme.headline,
+            onTap: onTap,
           );
         },
       ),

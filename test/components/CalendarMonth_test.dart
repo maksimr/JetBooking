@@ -43,4 +43,19 @@ void main() {
 
     expect(monthWidget.weeksList[0][DateTime.sunday - 1].day, equals(1));
   });
+
+  testWidgets('should render month title', (WidgetTester tester) async {
+    final date = DateTime.now();
+    await tester.pumpWidget(AppTheme(
+      child: CalendarMonth(
+        title: CalendarMonthTitle(date: date),
+        date: date,
+        dayBuilder: (BuildContext context, DateTime date) {
+          return Text("${date?.day}");
+        },
+      ),
+    ));
+
+    expect(find.text(CalendarMonthTitle.formatDate(date)), findsOneWidget);
+  });
 }

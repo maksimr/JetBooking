@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 typedef Widget DateWidgetBuilder(BuildContext context, DateTime date);
 
@@ -6,16 +7,28 @@ class CalendarMonth extends StatelessWidget {
   final DateTime date;
   final DateWidgetBuilder dayBuilder;
   final List<List<DateTime>> weeksList;
+  final Widget title;
 
   CalendarMonth({
     @required this.date,
     @required this.dayBuilder,
+    this.title,
     Key key,
   })  : weeksList = _generateWeeks(date),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final monthWidget = _buildMonth(context);
+    return title == null
+        ? monthWidget
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [title, monthWidget],
+          );
+  }
+
+  Widget _buildMonth(BuildContext context) {
     return Container(
       child: Flex(
         direction: Axis.vertical,
@@ -58,4 +71,26 @@ List<List<DateTime>> _generateWeeks(currentDate) {
       );
     });
   });
+}
+
+class CalendarMonthTitle extends StatelessWidget {
+  final DateTime date;
+
+  CalendarMonthTitle({this.date});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: Text(
+        formatDate(date),
+        textAlign: TextAlign.right,
+        style: Theme.of(context).textTheme.headline,
+      ),
+    );
+  }
+
+  static formatDate(date) {
+    return DateFormat.MMMM().format(date);
+  }
 }

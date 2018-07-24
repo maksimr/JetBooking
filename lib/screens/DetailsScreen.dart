@@ -17,6 +17,7 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text(DateFormat.MMMM().format(date)),
       ),
       body: _buildBody(),

@@ -46,7 +46,7 @@ class DetailsScreen extends StatelessWidget {
 
   _buildOfflineRooms() {
     return AccordionPane(
-      title: Text("Offline rooms"),
+      title: _buildTitle("Offline rooms"),
       trailing: Switch(
         onChanged: (_) => null,
         value: true,
@@ -56,7 +56,7 @@ class DetailsScreen extends StatelessWidget {
 
   _buildRecurring() {
     return AccordionPane(
-      title: Text("Recurring"),
+      title: _buildTitle("Recurring"),
       trailing: Switch(
         onChanged: (_) => null,
         value: false,
@@ -74,8 +74,19 @@ class DetailsScreen extends StatelessWidget {
 
   _buildDateItem(titleText, date) {
     return AccordionPane(
-      title: Text(titleText),
+      title: _buildTitle(titleText),
       trailing: _buildDateText(date),
+    );
+  }
+
+  _buildTitle(text) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Text(
+          text,
+          style: Theme.of(context).textTheme.headline,
+        );
+      },
     );
   }
 

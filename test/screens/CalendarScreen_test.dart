@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/Calendar.dart';
@@ -12,6 +13,14 @@ void main() {
     ));
 
     expect(find.byType(Calendar), findsOneWidget);
+  });
+
+  testWidgets('should render app bar', (WidgetTester tester) async {
+    await tester.pumpWidget(AppTheme(
+      child: CalendarScreen(),
+    ));
+
+    expect(find.byType(AppBar), findsOneWidget);
   });
 
   testWidgets('should open booking details screen when user tap on a day',

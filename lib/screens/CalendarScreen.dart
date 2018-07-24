@@ -11,8 +11,9 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Calendar(
+    return Scaffold(
+      appBar: AppBar(),
+      body: Calendar(
         date: date,
         onTap: (date) => _onDateSelect(context, date),
       ),

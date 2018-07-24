@@ -36,4 +36,19 @@ void main() {
     expect(find.descendant(of: item, matching: find.text("11:30")),
         findsOneWidget);
   });
+
+  testWidgets('should render end date item', (WidgetTester tester) async {
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date),
+    ));
+
+    final item = find.ancestor(
+      of: find.text("Ends"),
+      matching: find.byType(ListTile),
+    );
+
+    expect(find.descendant(of: item, matching: find.text("12:00")),
+        findsOneWidget);
+  });
 }

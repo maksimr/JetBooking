@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jetbooking/components/Accordion.dart';
 
 class DetailsScreen extends StatelessWidget {
   final DateTime date;
+  final DateTime startDate;
+  final DateTime endDate;
 
-  DetailsScreen({@required this.date});
+  DetailsScreen({@required this.date, Key key})
+      : endDate = date.add(Duration(minutes: 30)),
+        startDate = date,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +26,30 @@ class DetailsScreen extends StatelessWidget {
       children: [
         Accordion(
           children: [
-            AccordionPane(
-              title: Text("Starts"),
-              trailing: Text("${date.hour}:${date.minute}"),
-            ),
+            _buildStartsDate(),
+            _buildEndsDate(),
           ],
         ),
       ],
     );
+  }
+
+  _buildStartsDate() {
+    return _buildDateItem("Starts", startDate);
+  }
+
+  _buildEndsDate() {
+    return _buildDateItem("Ends", endDate);
+  }
+
+  _buildDateItem(titleText, date) {
+    return AccordionPane(
+      title: Text(titleText),
+      trailing: _buildDateText(date),
+    );
+  }
+
+  _buildDateText(date) {
+    return Text(DateFormat.Hm().format(date));
   }
 }

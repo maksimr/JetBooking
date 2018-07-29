@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/Accordion.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
+import 'package:jetbooking/i18n.dart';
 
 class DetailsScreen extends StatelessWidget {
   final DateTime date;
@@ -49,7 +50,7 @@ class DetailsScreen extends StatelessWidget {
 
   _buildOfflineRooms() {
     return AccordionPane(
-      title: _buildTitle("Offline rooms"),
+      title: _buildTitle(i18n("Offline rooms")),
       trailing: Switch(
         onChanged: (_) => null,
         value: true,
@@ -59,7 +60,7 @@ class DetailsScreen extends StatelessWidget {
 
   _buildRecurring() {
     return AccordionPane(
-      title: _buildTitle("Recurring"),
+      title: _buildTitle(i18n("Recurring")),
       trailing: Switch(
         onChanged: (_) => null,
         value: false,
@@ -68,11 +69,11 @@ class DetailsScreen extends StatelessWidget {
   }
 
   _buildStartsDate() {
-    return _buildDateItem("Starts", startDate);
+    return _buildDateItem(i18n("Starts"), startDate);
   }
 
   _buildEndsDate() {
-    return _buildDateItem("Ends", endDate);
+    return _buildDateItem(i18n("Ends"), endDate);
   }
 
   _buildDateItem(titleText, date) {

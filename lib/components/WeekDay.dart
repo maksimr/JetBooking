@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:jetbooking/i18n.dart';
 
 class WeekDay extends StatelessWidget {
   final int weekday;
@@ -14,13 +15,13 @@ class WeekDay extends StatelessWidget {
     );
   }
 
-  static const List<String> _shortWeekdays = const <String>[
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
+  static List<String> _shortWeekdays = <String>[
+    i18n('Mon'),
+    i18n('Tue'),
+    i18n('Wed'),
+    i18n('Thu'),
+    i18n('Fri'),
+    i18n('Sat'),
+    i18n('Sun'),
   ];
 }

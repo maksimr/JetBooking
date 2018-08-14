@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class Picker extends StatelessWidget {
@@ -5,11 +6,13 @@ class Picker extends StatelessWidget {
   final ValueChanged<int> onSelectedItemChanged;
   final double itemExtent;
   final FixedExtentScrollController controller;
+  final double perspective;
 
   Picker({
     @required this.itemExtent,
     @required this.children,
     @required this.onSelectedItemChanged,
+    this.perspective,
     this.controller,
   });
 
@@ -17,6 +20,7 @@ class Picker extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListWheelScrollView(
       diameterRatio: 1.0,
+      perspective: perspective ?? RenderListWheelViewport.defaultPerspective,
       controller: controller,
       itemExtent: itemExtent,
       children: children,

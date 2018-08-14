@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/Accordion.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
+import 'package:jetbooking/components/TimePicker.dart';
 import 'package:jetbooking/i18n.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -80,6 +81,14 @@ class DetailsScreen extends StatelessWidget {
     return AccordionPane(
       title: _buildTitle(titleText),
       trailing: _buildDateText(date),
+      child: _buildTimePicker(),
+    );
+  }
+
+  _buildTimePicker() {
+    return SizedBox(
+      height: 130.0,
+      child: TimePicker(),
     );
   }
 

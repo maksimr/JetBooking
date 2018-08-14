@@ -8,8 +8,8 @@ class TimePicker extends StatefulWidget {
 
   TimePicker({
     Key key,
-    date,
     this.onSelectedDateChanged,
+    date,
   })  : date = date ?? DateTime.now(),
         super(key: key);
 
@@ -65,7 +65,10 @@ class TimePickerState extends State<TimePicker> {
         hours: hour - date.hour,
         minutes: minute - date.minute,
       ));
-      widget.onSelectedDateChanged(date);
+
+      if (widget.onSelectedDateChanged != null) {
+        widget.onSelectedDateChanged(date);
+      }
     });
   }
 

@@ -5,15 +5,24 @@ import 'package:jetbooking/components/InlineCalendar.dart';
 import 'package:jetbooking/components/TimePicker.dart';
 import 'package:jetbooking/i18n.dart';
 
-class DetailsScreen extends StatelessWidget {
+class DetailsScreen extends StatefulWidget {
   final DateTime date;
-  final DateTime startDate;
-  final DateTime endDate;
 
-  DetailsScreen({@required this.date, Key key})
+  DetailsScreen({@required this.date});
+
+  @override
+  _DetailsScreenState createState() => _DetailsScreenState(date: date);
+}
+
+class _DetailsScreenState extends State<DetailsScreen> {
+  final DateTime date;
+  DateTime startDate;
+  DateTime endDate;
+
+  _DetailsScreenState({@required this.date, Key key})
       : endDate = date.add(Duration(minutes: 30)),
         startDate = date,
-        super(key: key);
+        super();
 
   @override
   Widget build(BuildContext context) {
@@ -70,26 +79,35 @@ class DetailsScreen extends StatelessWidget {
   }
 
   _buildStartsDate() {
-    return _buildDateItem(i18n("Starts"), startDate);
-  }
-
-  _buildEndsDate() {
-    return _buildDateItem(i18n("Ends"), endDate);
-  }
-
-  _buildDateItem(titleText, date) {
-    return AccordionPane(
-      title: _buildTitle(titleText),
-      trailing: _buildDateText(date),
-      child: _buildTimePicker(date),
+    return _buildDateItem(
+      i18n("Starts"),
+      startDate,
+      (date) => setState(() => startDate = date),
     );
   }
 
-  _buildTimePicker(date) {
+  _buildEndsDate() {
+    return _buildDateItem(
+      i18n("Ends"),
+      endDate,
+      (date) => setState(() => endDate = date),
+    );
+  }
+
+  _buildDateItem(titleText, date, onChange) {
+    return AccordionPane(
+      title: _buildTitle(titleText),
+      trailing: _buildDateText(date),
+      child: _buildTimePicker(date, onChange),
+    );
+  }
+
+  _buildTimePicker(date, onChange) {
     return SizedBox(
       height: 130.0,
       child: TimePicker(
         date: date,
+        onSelectedDateChanged: onChange,
       ),
     );
   }

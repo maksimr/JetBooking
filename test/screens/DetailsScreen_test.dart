@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
+import 'package:jetbooking/components/Picker.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
 
 void main() {
@@ -28,21 +29,45 @@ void main() {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
 
-    expectFindOneItemWidget("Starts", "11:30");
+    expect(findItem("Starts", "11:30"), findsOneWidget);
+  });
+
+  testWidgets('should change start date item', (WidgetTester tester) async {
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+
+    await tester.tap(findItem("Starts"));
+    await tester.pump();
+
+    await jumpToDateTime(tester, hours: 12);
+
+    expect(findItem("Starts", "12:30"), findsOneWidget);
   });
 
   testWidgets('should render end date item', (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
 
-    expectFindOneItemWidget("Ends", "12:00");
+    expect(findItem("Ends", "12:00"), findsOneWidget);
+  });
+
+  testWidgets('should change end date item', (WidgetTester tester) async {
+    final date = DateTime(2018, DateTime.june, 1, 11, 00);
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+
+    await tester.tap(findItem("Ends"));
+    await tester.pump();
+
+    await jumpToDateTime(tester, hours: 12);
+
+    expect(findItem("Ends", "12:30"), findsOneWidget);
   });
 
   testWidgets('should render recurring item', (WidgetTester tester) async {
     final date = DateTime.now();
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
 
-    expectFindOneItemWidget("Recurring");
+    expect(findItem("Recurring", null), findsOneWidget);
   });
 
   testWidgets('should render offline rooms control',
@@ -50,7 +75,7 @@ void main() {
     final date = DateTime.now();
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
 
-    expectFindOneItemWidget("Offline rooms");
+    expect(findItem("Offline rooms", null), findsOneWidget);
   });
 
   testWidgets('should render month in the app bar',
@@ -74,18 +99,13 @@ void main() {
   });
 }
 
-expectFindOneItemWidget(text, [value]) {
-  if (value == null) {
-    expect(find.text(text), findsOneWidget);
-    return;
-  }
-
-  expect(
-      find.descendant(
-        of: findItemByText(text),
-        matching: find.text(value),
-      ),
-      findsOneWidget);
+findItem(text, [value]) {
+  return value == null
+      ? find.text(text)
+      : find.descendant(
+          of: findItemByText(text),
+          matching: find.text(value),
+        );
 }
 
 findItemByText(text) {
@@ -93,4 +113,16 @@ findItemByText(text) {
     of: find.text(text),
     matching: find.byType(ListTile),
   );
+}
+
+jumpToDateTime(tester, {hours, minutes}) async {
+  if (hours != null) jumpToItem(tester, find.byType(Picker).at(0), hours);
+  if (minutes != null)
+    jumpToItem(tester, find.byType(Picker).at(1), minutes ~/ 5);
+  await tester.pump();
+}
+
+jumpToItem(tester, finder, itemIndex) {
+  Picker minPicker = tester.widget(finder);
+  minPicker.controller.jumpToItem(itemIndex);
 }

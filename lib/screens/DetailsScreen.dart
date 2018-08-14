@@ -116,9 +116,28 @@ class _DetailsScreenState extends State<DetailsScreen> {
       ),
       child: SizedBox(
         height: 130.0,
-        child: TimePicker(
-          date: date,
-          onSelectedDateChanged: onChange,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              top: 44.0,
+              bottom: 45.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: mTheme.accentColor),
+                    bottom: BorderSide(color: mTheme.accentColor),
+                  ),
+                ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.expand(height: 40.0),
+                ),
+              ),
+            ),
+            TimePicker(
+              date: date,
+              onSelectedDateChanged: onChange,
+            ),
+          ],
         ),
       ),
     );

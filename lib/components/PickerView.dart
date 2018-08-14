@@ -1,14 +1,14 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class Picker extends StatelessWidget {
+class PickerView extends StatelessWidget {
   final List<Widget> children;
   final ValueChanged<int> onSelectedItemChanged;
   final double itemExtent;
   final FixedExtentScrollController controller;
   final double perspective;
 
-  Picker({
+  PickerView({
     @required this.itemExtent,
     @required this.children,
     @required this.onSelectedItemChanged,

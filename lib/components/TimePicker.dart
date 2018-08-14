@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:jetbooking/components/Picker.dart';
+import 'package:jetbooking/components/PickerView.dart';
 
 class TimePicker extends StatelessWidget {
   final double itemExtent = 30.0;
@@ -29,7 +29,7 @@ class TimePicker extends StatelessWidget {
   }
 
   _buildPicker(List<Widget> children) {
-    return Picker(
+    return PickerView(
       perspective: 0.000001,
       children: children,
       itemExtent: itemExtent,

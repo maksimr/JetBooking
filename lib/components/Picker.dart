@@ -20,6 +20,7 @@ class Picker extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListWheelScrollView(
       diameterRatio: 1.0,
+      physics: const FixedExtentScrollPhysics(),
       perspective: perspective ?? RenderListWheelViewport.defaultPerspective,
       controller: controller,
       itemExtent: itemExtent,

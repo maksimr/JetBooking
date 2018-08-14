@@ -107,11 +107,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   _buildTimePicker(date, onChange) {
-    return SizedBox(
-      height: 130.0,
-      child: TimePicker(
-        date: date,
-        onSelectedDateChanged: onChange,
+    final mTheme = Theme.of(context);
+
+    return Material(
+      color: mTheme.primaryColor,
+      textStyle: TextStyle(
+        color: mTheme.primaryTextTheme.body2.color,
+      ),
+      child: SizedBox(
+        height: 130.0,
+        child: TimePicker(
+          date: date,
+          onSelectedDateChanged: onChange,
+        ),
       ),
     );
   }

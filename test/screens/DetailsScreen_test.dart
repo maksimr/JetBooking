@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
-import 'package:jetbooking/components/Picker.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
+
+import '../components/TimePicker.dart';
 
 void main() {
   testWidgets('should create screen', (WidgetTester tester) async {
@@ -113,16 +114,4 @@ findItemByText(text) {
     of: find.text(text),
     matching: find.byType(ListTile),
   );
-}
-
-jumpToDateTime(tester, {hours, minutes}) async {
-  if (hours != null) jumpToItem(tester, find.byType(Picker).at(0), hours);
-  if (minutes != null)
-    jumpToItem(tester, find.byType(Picker).at(1), minutes ~/ 5);
-  await tester.pump();
-}
-
-jumpToItem(tester, finder, itemIndex) {
-  Picker minPicker = tester.widget(finder);
-  minPicker.controller.jumpToItem(itemIndex);
 }

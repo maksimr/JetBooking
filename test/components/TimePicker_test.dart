@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jetbooking/components/AppTheme.dart';
-import 'package:jetbooking/components/Picker.dart';
 import 'package:jetbooking/components/TimePicker.dart';
+
+import 'TimePicker.dart';
 
 void main() {
   testWidgets('should create widget', (WidgetTester tester) async {
@@ -73,16 +74,4 @@ void main() {
 
     expect(date.difference(initDate), Duration(hours: 1, minutes: 5));
   });
-}
-
-jumpToDateTime(tester, {hours, minutes}) async {
-  if (hours != null) jumpToItem(tester, find.byType(Picker).at(0), hours);
-  if (minutes != null)
-    jumpToItem(tester, find.byType(Picker).at(1), minutes ~/ 5);
-  await tester.pump();
-}
-
-jumpToItem(tester, finder, itemIndex) {
-  Picker minPicker = tester.widget(finder);
-  minPicker.controller.jumpToItem(itemIndex);
 }

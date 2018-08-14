@@ -82,7 +82,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return _buildDateItem(
       i18n("Starts"),
       startDate,
-      (date) => setState(() => startDate = date),
+      (date) => setState(() {
+            final duration = endDate.difference(startDate);
+            startDate = date;
+            endDate = startDate.add(duration);
+          }),
     );
   }
 

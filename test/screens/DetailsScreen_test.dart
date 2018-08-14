@@ -98,6 +98,21 @@ void main() {
 
     expect(find.byType(InlineCalendar), findsOneWidget);
   });
+
+  testWidgets(
+      'should automaticaly change end time when user change start time to keep duration',
+      (WidgetTester tester) async {
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+
+    await tester.tap(findItem("Starts"));
+    await tester.pump();
+
+    await jumpToDateTime(tester, hours: 12);
+
+    expect(findItem("Starts", "12:30"), findsOneWidget);
+    expect(findItem("Ends", "13:00"), findsOneWidget);
+  });
 }
 
 findItem(text, [value]) {

@@ -1,13 +1,31 @@
 import 'package:flutter/widgets.dart';
 import 'package:jetbooking/components/Picker.dart';
 
-class TimePicker extends StatelessWidget {
+class TimePicker extends StatefulWidget {
   final double itemExtent = 30.0;
+  final ValueChanged<DateTime> onSelectedDateChanged;
   final DateTime date;
 
-  TimePicker({Key key, date})
-      : date = date ?? DateTime.now(),
+  TimePicker({
+    Key key,
+    date,
+    this.onSelectedDateChanged,
+  })  : date = date ?? DateTime.now(),
         super(key: key);
+
+  @override
+  TimePickerState createState() {
+    return new TimePickerState(initialDate: date);
+  }
+}
+
+class TimePickerState extends State<TimePicker> {
+  final DateTime initialDate;
+  DateTime date;
+
+  TimePickerState({this.initialDate})
+      : date = initialDate,
+        super();
 
   @override
   Widget build(BuildContext context) {
@@ -21,29 +39,47 @@ class TimePicker extends StatelessWidget {
 
   _buildHourList() {
     return _buildPicker(
-        List<Widget>.generate(
-          24,
-          (it) => TimePickerHourItem(hourIndex: it),
-        ),
-        date.hour);
+      children: List<Widget>.generate(
+        24,
+        (it) => TimePickerHourItem(hourIndex: it),
+      ),
+      initialItem: date.hour,
+      onSelectedDateChanged: (int value) => _updateDate(value, date.minute),
+    );
   }
 
   _buildMinList() {
     return _buildPicker(
-        List<Widget>.generate(
-          12,
-          (it) => TimePickerMinItem(minIndex: it * 5),
-        ),
-        _roundTo(date.minute, 5) ~/ 5);
+      children: List<Widget>.generate(
+        12,
+        (it) => TimePickerMinItem(minIndex: it * 5),
+      ),
+      initialItem: _roundTo(date.minute, 5) ~/ 5,
+      onSelectedDateChanged: (int value) => _updateDate(date.hour, value * 5),
+    );
   }
 
-  _buildPicker(List<Widget> children, [initialItem = 0]) {
+  void _updateDate(int hour, int minute) {
+    setState(() {
+      date = date.add(Duration(
+        hours: hour - date.hour,
+        minutes: minute - date.minute,
+      ));
+      widget.onSelectedDateChanged(date);
+    });
+  }
+
+  _buildPicker({
+    List<Widget> children,
+    initialItem = 0,
+    Function(int value) onSelectedDateChanged,
+  }) {
     return Picker(
       perspective: 0.000001,
       initialItem: initialItem,
       children: children,
-      itemExtent: itemExtent,
-      onSelectedItemChanged: (int value) {},
+      itemExtent: widget.itemExtent,
+      onSelectedItemChanged: onSelectedDateChanged,
     );
   }
 }

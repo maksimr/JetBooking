@@ -81,14 +81,16 @@ class DetailsScreen extends StatelessWidget {
     return AccordionPane(
       title: _buildTitle(titleText),
       trailing: _buildDateText(date),
-      child: _buildTimePicker(),
+      child: _buildTimePicker(date),
     );
   }
 
-  _buildTimePicker() {
+  _buildTimePicker(date) {
     return SizedBox(
       height: 130.0,
-      child: TimePicker(),
+      child: TimePicker(
+        date: date,
+      ),
     );
   }
 

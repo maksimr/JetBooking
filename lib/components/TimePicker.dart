@@ -3,6 +3,11 @@ import 'package:jetbooking/components/Picker.dart';
 
 class TimePicker extends StatelessWidget {
   final double itemExtent = 30.0;
+  final DateTime date;
+
+  TimePicker({Key key, date})
+      : date = date ?? DateTime.now(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,22 +20,27 @@ class TimePicker extends StatelessWidget {
   }
 
   _buildHourList() {
-    return _buildPicker(List<Widget>.generate(
-      24,
-      (it) => TimePickerHourItem(hourIndex: it),
-    ));
+    return _buildPicker(
+        List<Widget>.generate(
+          24,
+          (it) => TimePickerHourItem(hourIndex: it),
+        ),
+        date.hour);
   }
 
   _buildMinList() {
-    return _buildPicker(List<Widget>.generate(
-      12,
-      (it) => TimePickerMinItem(minIndex: it * 5),
-    ));
+    return _buildPicker(
+        List<Widget>.generate(
+          12,
+          (it) => TimePickerMinItem(minIndex: it * 5),
+        ),
+        _roundTo(date.minute, 5) ~/ 5);
   }
 
-  _buildPicker(List<Widget> children) {
+  _buildPicker(List<Widget> children, [initialItem = 0]) {
     return Picker(
       perspective: 0.000001,
+      initialItem: initialItem,
       children: children,
       itemExtent: itemExtent,
       onSelectedItemChanged: (int value) {},
@@ -94,4 +104,9 @@ class TimePickerItemText extends StatelessWidget {
 
 String _zeroLeftPad(int it) {
   return it < 10 ? "0$it" : "$it";
+}
+
+int _roundTo(int it, int d) {
+  if (it % d == 0) return it;
+  return (d - it % d) + it;
 }

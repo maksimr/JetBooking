@@ -54,7 +54,7 @@ class TimePickerState extends State<TimePicker> {
         12,
         (it) => TimePickerMinItem(minIndex: it * 5),
       ),
-      initialItem: _roundTo(date.minute, 5) ~/ 5,
+      initialItem: roundTo(date.minute, 5) ~/ 5,
       onSelectedDateChanged: (int value) => _updateDate(date.hour, value * 5),
     );
   }
@@ -141,11 +141,11 @@ class TimePickerItemText extends StatelessWidget {
   }
 }
 
-String _zeroLeftPad(int it) {
-  return it < 10 ? "0$it" : "$it";
-}
-
-int _roundTo(int it, int d) {
+int roundTo(int it, int d) {
   if (it % d == 0) return it;
   return (d - it % d) + it;
+}
+
+String _zeroLeftPad(int it) {
+  return it < 10 ? "0$it" : "$it";
 }

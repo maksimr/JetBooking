@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jetbooking/components/Calendar.dart';
+import 'package:jetbooking/components/TimePicker.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -34,14 +35,12 @@ class CalendarScreen extends StatelessWidget {
 
   DateTime _roundDate(DateTime date) {
     final dateTimeNow = DateTime.now();
-    final mm = dateTimeNow.minute;
-    final roundedMin = mm + (((5 * ((mm / 5).floor() + 1))) - mm);
     return DateTime(
       date.year,
       date.month,
       date.day,
       dateTimeNow.hour,
-      roundedMin,
+      roundTo(dateTimeNow.minute, 5),
     );
   }
 }

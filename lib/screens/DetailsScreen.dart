@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/Accordion.dart';
@@ -5,23 +6,18 @@ import 'package:jetbooking/components/InlineCalendar.dart';
 import 'package:jetbooking/components/TimePicker.dart';
 import 'package:jetbooking/i18n.dart';
 
-class DetailsScreen extends StatefulWidget {
+class DetailsScreen extends StatelessWidget {
   final DateTime date;
+  final DateTime initialStartDate;
+  final DateTime initialEndDate;
+  final StreamController<DateTime> startDateStreamCtrl;
+  final StreamController<DateTime> endDateStreamCtrl;
 
-  DetailsScreen({@required this.date});
-
-  @override
-  _DetailsScreenState createState() => _DetailsScreenState(date: date);
-}
-
-class _DetailsScreenState extends State<DetailsScreen> {
-  final DateTime date;
-  DateTime startDate;
-  DateTime endDate;
-
-  _DetailsScreenState({@required this.date, Key key})
-      : endDate = date.add(Duration(minutes: 30)),
-        startDate = date,
+  DetailsScreen({@required this.date, Key key})
+      : startDateStreamCtrl = StreamController.broadcast(),
+        endDateStreamCtrl = StreamController.broadcast(),
+        initialStartDate = date,
+        initialEndDate = date.add(Duration(minutes: 30)),
         super();
 
   @override
@@ -79,22 +75,42 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   _buildStartsDate() {
-    return _buildDateItem(
-      i18n("Starts"),
-      startDate,
-      (date) => setState(() {
-            final duration = endDate.difference(startDate);
-            startDate = date;
-            endDate = startDate.add(duration);
-          }),
+    return StreamBuilder(
+      initialData: initialEndDate,
+      stream: endDateStreamCtrl.stream,
+      builder: (context, snapshot) {
+        final endDate = snapshot.data;
+        return StreamBuilder(
+          initialData: initialStartDate,
+          stream: startDateStreamCtrl.stream,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            final startDate = snapshot.data;
+            return _buildDateItem(
+              i18n("Starts"),
+              startDate,
+              (date) {
+                final duration = endDate.difference(startDate);
+                startDateStreamCtrl.add(date);
+                endDateStreamCtrl.add(date.add(duration));
+              },
+            );
+          },
+        );
+      },
     );
   }
 
   _buildEndsDate() {
-    return _buildDateItem(
-      i18n("Ends"),
-      endDate,
-      (date) => setState(() => endDate = date),
+    return StreamBuilder(
+      initialData: initialEndDate,
+      stream: endDateStreamCtrl.stream,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return _buildDateItem(
+          i18n("Ends"),
+          snapshot.data,
+          (date) => endDateStreamCtrl.add(date),
+        );
+      },
     );
   }
 
@@ -107,39 +123,42 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   _buildTimePicker(date, onChange) {
-    final mTheme = Theme.of(context);
-
-    return Material(
-      color: mTheme.primaryColor,
-      textStyle: TextStyle(
-        color: mTheme.primaryTextTheme.body2.color,
-      ),
-      child: SizedBox(
-        height: 130.0,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              top: 44.0,
-              bottom: 45.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(color: mTheme.accentColor),
-                    bottom: BorderSide(color: mTheme.accentColor),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final mTheme = Theme.of(context);
+        return Material(
+          color: mTheme.primaryColor,
+          textStyle: TextStyle(
+            color: mTheme.primaryTextTheme.body2.color,
+          ),
+          child: SizedBox(
+            height: 130.0,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  top: 44.0,
+                  bottom: 45.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: mTheme.accentColor),
+                        bottom: BorderSide(color: mTheme.accentColor),
+                      ),
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints.expand(height: 40.0),
+                    ),
                   ),
                 ),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints.expand(height: 40.0),
+                TimePicker(
+                  date: date,
+                  onSelectedDateChanged: onChange,
                 ),
-              ),
+              ],
             ),
-            TimePicker(
-              date: date,
-              onSelectedDateChanged: onChange,
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

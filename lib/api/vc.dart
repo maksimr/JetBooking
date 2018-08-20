@@ -6,12 +6,12 @@ import 'package:meta/meta.dart';
 getRooms() async => vcRequest<List>("getRooms");
 
 getVacantRooms({
-  @required startTime,
-  @required endTime,
+  @required int startTime,
+  @required int endTime,
 }) async {
-  final startTimeInSeconds = startTime / 1000;
-  final endTimeInSeconds = endTime / 1000;
-  return vcRequest<List<Map>>(
+  final startTimeInSeconds = startTime ~/ 1000;
+  final endTimeInSeconds = endTime ~/ 1000;
+  return vcRequest<List>(
       "getVacantRooms?startTime=$startTimeInSeconds&endTime=$endTimeInSeconds");
 }
 

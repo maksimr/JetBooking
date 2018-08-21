@@ -41,10 +41,12 @@ class VacantRooms extends StatelessWidget {
       itemBuilder: (context, index) {
         final Map room = rooms[index];
         return ListTile(
-          title: Text("${room["title"]}"),
-          subtitle: Text(room["description"] ?? ""),
-          leading: room["hasTv"] ? Icon(Icons.tv) : null,
-        );
+            title: Text("${room["title"]}"),
+            subtitle: Text(room["description"] ?? ""),
+            leading: Icon(
+              Icons.tv,
+              color: room["hasTv"] ? Colors.lightGreen : Colors.redAccent,
+            ));
       },
     );
   }

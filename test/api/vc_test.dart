@@ -24,9 +24,7 @@ void main() {
       );
       expect(data.length, 1);
     },
-        createHttpClient: (_) =>
-            whenGetUrl(vcUrl("getVacantRooms?startTime=${startTime ~/
-                1000}&endTime=${endTime ~/
-                1000}"), [createRoomMock()]));
+        createHttpClient: (_) => whenGetUrl(
+            vcVacantRoomsUrl(startTime, endTime), [createRoomMock()]));
   });
 }

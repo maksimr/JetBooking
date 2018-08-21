@@ -1,7 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
+import 'package:jetbooking/api/vc.dart';
 import 'package:mockito/mockito.dart';
+
+createVacantRoomsRunZoneFor({startTime, endTime, rooms}) =>
+    (body) => HttpOverrides.runZoned(body,
+        createHttpClient: (_) =>
+            whenGetUrl(vcVacantRoomsUrl(startTime, endTime), rooms));
+
+vcVacantRoomsUrl(startTime, endTime) {
+  return vcUrl("getVacantRooms?startTime=${startTime ~/
+      1000}&endTime=${endTime ~/
+      1000}");
+}
 
 whenGetUrl(url, responseData) {
   final MockHttpClient client = new MockHttpClient();

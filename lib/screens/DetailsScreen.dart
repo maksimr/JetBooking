@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:jetbooking/components/Accordion.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
 import 'package:jetbooking/components/TimePicker.dart';
+import 'package:jetbooking/components/VacantRooms.dart';
 import 'package:jetbooking/i18n.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -44,6 +45,26 @@ class DetailsScreen extends StatelessWidget {
             _buildOfflineRooms(),
           ].map((it) => _withDivider(it)).toList(),
         ),
+        Expanded(
+          child: StreamBuilder(
+            initialData: initialStartDate,
+            stream: startDateStreamCtrl.stream,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              final startDate = snapshot.data;
+              return StreamBuilder(
+                initialData: initialEndDate,
+                stream: endDateStreamCtrl.stream,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  final endDate = snapshot.data;
+                  return VacantRooms(
+                    startTime: startDate,
+                    endTime: endDate,
+                  );
+                },
+              );
+            },
+          ),
+        )
       ],
     );
   }

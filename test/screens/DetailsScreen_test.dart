@@ -3,9 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
+import 'package:jetbooking/components/VacantRooms.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
 
+import '../api/vc.dart';
 import '../components/TimePicker.dart';
+import '../components/VacantRooms.dart';
 
 void main() {
   testWidgets('should create screen', (WidgetTester tester) async {
@@ -112,6 +115,23 @@ void main() {
 
     expect(findItem("Starts", "12:30"), findsOneWidget);
     expect(findItem("Ends", "13:00"), findsOneWidget);
+  });
+
+  testWidgets('should render rooms', (WidgetTester tester) async {
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    final startTime = date;
+    final endTime = date.add(Duration(minutes: 30));
+    final rooms = [createRoomMock()];
+
+    createVacantRoomsRunZoneFor(
+      startTime: startTime.millisecondsSinceEpoch,
+      endTime: endTime.millisecondsSinceEpoch,
+      rooms: rooms,
+    )(() async {
+      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+      await waitWhenVacantRoomsAreLoaded(tester);
+      expect(findVacantRooms(), findsNWidgets(rooms.length));
+    });
   });
 }
 

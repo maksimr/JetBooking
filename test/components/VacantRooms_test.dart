@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/VacantRooms.dart';
 
 import '../api/vc.dart';
+import 'VacantRooms.dart';
 
 void main() {
   final startTime = DateTime(2018, 1, 1, 1, 30);
@@ -28,7 +28,7 @@ void main() {
     });
   });
 
-  testWidgets('should render room', (WidgetTester tester) async {
+  testWidgets('should render rooms', (WidgetTester tester) async {
     runZoneWithRooms(() async {
       await tester.pumpWidget(AppTheme(
         child: VacantRooms(
@@ -37,14 +37,9 @@ void main() {
         ),
       ));
 
-      await waitFutureBuilder(tester);
+      await waitWhenVacantRoomsAreLoaded(tester);
 
-      expect(find.byType(ListTile), findsNWidgets(rooms.length));
+      expect(findVacantRooms(), findsNWidgets(rooms.length));
     });
   });
-}
-
-waitFutureBuilder(tester) async {
-  await (tester.widget(find.byType(FutureBuilder)) as FutureBuilder).future;
-  await tester.pumpAndSettle();
 }

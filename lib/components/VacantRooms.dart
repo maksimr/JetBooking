@@ -40,9 +40,13 @@ class VacantRooms extends StatelessWidget {
       itemCount: rooms.length,
       itemBuilder: (context, index) {
         final Map room = rooms[index];
+        final description = room["description"];
+        final subtitle = description != null && description != ""
+            ? description
+            : room["location"];
         return ListTile(
             title: Text("${room["title"]}"),
-            subtitle: Text(room["description"] ?? ""),
+            subtitle: Text(subtitle),
             leading: Icon(
               Icons.tv,
               color: room["hasTv"] ? Colors.lightGreen : Colors.redAccent,

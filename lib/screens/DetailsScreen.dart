@@ -11,14 +11,18 @@ class DetailsScreen extends StatelessWidget {
   final DateTime date;
   final DateTime initialStartDate;
   final DateTime initialEndDate;
+  final bool initialHasTv;
   final StreamController<DateTime> startDateStreamCtrl;
   final StreamController<DateTime> endDateStreamCtrl;
+  final StreamController<bool> hasTvStreamCtrl;
 
   DetailsScreen({@required this.date, Key key})
       : startDateStreamCtrl = StreamController.broadcast(),
         endDateStreamCtrl = StreamController.broadcast(),
+        hasTvStreamCtrl = StreamController.broadcast(),
         initialStartDate = date,
         initialEndDate = date.add(Duration(minutes: 30)),
+        initialHasTv = false,
         super();
 
   @override
@@ -47,18 +51,26 @@ class DetailsScreen extends StatelessWidget {
         ),
         Expanded(
           child: StreamBuilder(
-            initialData: initialStartDate,
-            stream: startDateStreamCtrl.stream,
+            initialData: initialHasTv,
+            stream: hasTvStreamCtrl.stream,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              final startDate = snapshot.data;
+              final hasTv = snapshot.data;
               return StreamBuilder(
-                initialData: initialEndDate,
-                stream: endDateStreamCtrl.stream,
+                initialData: initialStartDate,
+                stream: startDateStreamCtrl.stream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  final endDate = snapshot.data;
-                  return VacantRooms(
-                    startTime: startDate,
-                    endTime: endDate,
+                  final startDate = snapshot.data;
+                  return StreamBuilder(
+                    initialData: initialEndDate,
+                    stream: endDateStreamCtrl.stream,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      final endDate = snapshot.data;
+                      return VacantRooms(
+                        hasTv: hasTv,
+                        startTime: startDate,
+                        endTime: endDate,
+                      );
+                    },
                   );
                 },
               );
@@ -78,9 +90,16 @@ class DetailsScreen extends StatelessWidget {
   _buildOfflineRooms() {
     return AccordionPane(
       title: _buildTitle(i18n("Offline rooms")),
-      trailing: Switch(
-        onChanged: (_) => null,
-        value: true,
+      trailing: StreamBuilder(
+        initialData: initialHasTv,
+        stream: hasTvStreamCtrl.stream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          final hasTv = snapshot.data;
+          return Switch(
+            onChanged: (offline) => hasTvStreamCtrl.add(!offline),
+            value: !hasTv,
+          );
+        },
       ),
     );
   }

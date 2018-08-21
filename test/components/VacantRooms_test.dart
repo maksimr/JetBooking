@@ -42,4 +42,25 @@ void main() {
       expect(findVacantRooms(), findsNWidgets(rooms.length));
     });
   });
+
+  testWidgets('should render rooms with TV only', (WidgetTester tester) async {
+    createVacantRoomsRunZoneFor(
+      startTime: startTime.millisecondsSinceEpoch,
+      endTime: endTime.millisecondsSinceEpoch,
+      rooms: rooms,
+      hasTv: true,
+    )(() async {
+      await tester.pumpWidget(AppTheme(
+        child: VacantRooms(
+          startTime: startTime,
+          endTime: endTime,
+          hasTv: true,
+        ),
+      ));
+
+      await waitWhenVacantRoomsAreLoaded(tester);
+
+      expect(findVacantRooms(), findsNWidgets(rooms.length));
+    });
+  });
 }

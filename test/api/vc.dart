@@ -4,15 +4,15 @@ import 'dart:convert';
 import 'package:jetbooking/api/vc.dart';
 import 'package:mockito/mockito.dart';
 
-createVacantRoomsRunZoneFor({startTime, endTime, rooms}) =>
+createVacantRoomsRunZoneFor({startTime, endTime, rooms, hasTv = false}) =>
     (body) => HttpOverrides.runZoned(body,
-        createHttpClient: (_) =>
-            whenGetUrl(vcVacantRoomsUrl(startTime, endTime), rooms));
+        createHttpClient: (_) => whenGetUrl(
+            vcVacantRoomsUrl(startTime, endTime, hasTv: hasTv), rooms));
 
-vcVacantRoomsUrl(startTime, endTime) {
+vcVacantRoomsUrl(startTime, endTime, {bool hasTv = false}) {
   return vcUrl("getVacantRooms?startTime=${startTime ~/
       1000}&endTime=${endTime ~/
-      1000}");
+      1000}&hasTv=$hasTv");
 }
 
 whenGetUrl(url, responseData) {

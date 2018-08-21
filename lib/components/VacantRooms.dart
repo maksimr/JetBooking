@@ -4,10 +4,12 @@ import 'package:jetbooking/api/vc.dart';
 class VacantRooms extends StatelessWidget {
   final DateTime startTime;
   final DateTime endTime;
+  final hasTv;
 
   VacantRooms({
     @required this.startTime,
     @required this.endTime,
+    this.hasTv = false,
   });
 
   @override
@@ -16,6 +18,7 @@ class VacantRooms extends StatelessWidget {
       future: getVacantRooms(
         startTime: startTime.millisecondsSinceEpoch,
         endTime: endTime.millisecondsSinceEpoch,
+        hasTv: hasTv,
       ),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
@@ -40,6 +43,7 @@ class VacantRooms extends StatelessWidget {
         return ListTile(
           title: Text("${room["title"]}"),
           subtitle: Text(room["description"] ?? ""),
+          leading: room["hasTv"] ? Icon(Icons.tv) : null,
         );
       },
     );

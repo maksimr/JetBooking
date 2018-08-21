@@ -8,11 +8,12 @@ getRooms() async => vcRequest<List>("getRooms");
 getVacantRooms({
   @required int startTime,
   @required int endTime,
+  bool hasTv = false,
 }) async {
   final startTimeInSeconds = startTime ~/ 1000;
   final endTimeInSeconds = endTime ~/ 1000;
   return vcRequest<List>(
-      "getVacantRooms?startTime=$startTimeInSeconds&endTime=$endTimeInSeconds");
+      "getVacantRooms?startTime=$startTimeInSeconds&endTime=$endTimeInSeconds&hasTv=$hasTv");
 }
 
 Future<T> vcRequest<T>(path) async {

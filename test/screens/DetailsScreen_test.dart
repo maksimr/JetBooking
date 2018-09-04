@@ -156,10 +156,7 @@ void main() {
         endTime: newDate.add(Duration(minutes: 30)).millisecondsSinceEpoch,
         rooms: roomsForNewDate,
       )(() async {
-        await tester.tap(find.descendant(
-          of: find.byType(InlineCalendar),
-          matching: find.text(newDate.day.toString()),
-        ));
+        await tapOnDayInCalendar(tester, newDate);
 
         await eventFiring(tester);
         await waitWhenVacantRoomsAreLoaded(tester);
@@ -167,10 +164,33 @@ void main() {
       });
     });
   });
+
+  testWidgets(
+      'should preserve hours and minutes when change date by inline calendar',
+      (WidgetTester tester) async {
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
+
+    await tester.tap(findItem("Starts"));
+    await tester.pump();
+    await jumpToDateTime(tester, hours: 12);
+
+    await tapOnDayInCalendar(tester, date.add(Duration(days: 1)));
+    await eventFiring(tester);
+    expect(findItem("Starts", "12:30"), findsOneWidget);
+  });
 }
 
-Future<Null> eventFiring(WidgetTester tester) async {
+eventFiring(WidgetTester tester) async {
   await tester.pump(Duration.zero);
+}
+
+tapOnDayInCalendar(tester, date) async {
+  return tester.tap(find.descendant(
+    of: find.byType(InlineCalendar),
+    matching: find.text(date.day.toString()),
+  ));
 }
 
 findItem(text, [value]) {

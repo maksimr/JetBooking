@@ -76,11 +76,17 @@ class DetailsScreen extends StatelessWidget {
       initialData: $$startDate.value,
       stream: $$startDate,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        final currentDate = snapshot.data;
+        final DateTime currentDate = snapshot.data;
         return InlineCalendar(
           seedDate: date,
           date: currentDate,
-          onTap: _onChangeStartDate,
+          onTap: (date) => _onChangeStartDate(DateTime(
+                date.year,
+                date.month,
+                date.day,
+                currentDate.hour,
+                currentDate.minute,
+              )),
         );
       },
     );

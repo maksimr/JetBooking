@@ -18,20 +18,26 @@ class CalendarDay extends StatelessWidget {
   Widget build(BuildContext context) {
     final mTheme = Theme.of(context);
 
-    return Container(
-      padding: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: selected ? mTheme.accentColor : null,
-        shape: BoxShape.circle,
+    return _buildInk(
+      context,
+      Container(
+        padding: EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: selected ? mTheme.accentColor : null,
+          shape: BoxShape.circle,
+        ),
+        child: _buildContent(context),
       ),
-      child: _buildInk(context),
     );
   }
 
-  Widget _buildInk(BuildContext context) {
+  Widget _buildInk(BuildContext context, child) {
     return onTap != null && date != null
-        ? InkWell(onTap: () => onTap(date), child: _buildContent(context))
-        : _buildContent(context);
+        ? InkWell(
+            child: child,
+            onTap: () => onTap(date),
+          )
+        : child;
   }
 
   Center _buildContent(BuildContext context) {

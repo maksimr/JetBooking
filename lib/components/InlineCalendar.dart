@@ -29,20 +29,25 @@ class InlineCalendar extends StatelessWidget {
   }
 
   _buildDay(DateTime dayDate) {
-    return SizedBox(
-      width: 64.0,
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(top: 16.0)),
-            _buildWeekDayTitle(dayDate),
-            Padding(padding: EdgeInsets.only(top: 8.0)),
-            CalendarDay(
-              onTap: onTap,
-              date: dayDate,
-              selected: _isEqual(dayDate, date),
-            ),
-          ],
+    return InkWell(
+      onTap: () => onTap(dayDate),
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: SizedBox(
+        width: 64.0,
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Padding(padding: EdgeInsets.only(top: 16.0)),
+              _buildWeekDayTitle(dayDate),
+              Padding(padding: EdgeInsets.only(top: 8.0)),
+              CalendarDay(
+                onTap: onTap,
+                date: dayDate,
+                selected: _isEqual(dayDate, date),
+              ),
+            ],
+          ),
         ),
       ),
     );

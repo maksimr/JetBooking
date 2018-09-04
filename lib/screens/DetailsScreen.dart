@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:jetbooking/components/BehaviorSubjectBuilder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:jetbooking/components/Accordion.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
@@ -74,8 +73,9 @@ class DetailsScreen extends StatelessWidget {
   _buildOfflineRooms() {
     return AccordionPane(
       title: _buildTitle(i18n("Offline rooms")),
-      trailing: BehaviorSubjectBuilder(
-        subject: $$hasTv,
+      trailing: StreamBuilder(
+        initialData: $$hasTv.value,
+        stream: $$hasTv.stream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           final hasTv = snapshot.data;
           return Switch(
@@ -98,8 +98,9 @@ class DetailsScreen extends StatelessWidget {
   }
 
   _buildStartsDate() {
-    return BehaviorSubjectBuilder(
-      subject: $$startDate,
+    return StreamBuilder(
+      initialData: $$startDate.value,
+      stream: $$startDate.stream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         final startDate = snapshot.data;
         return _buildDateItem(
@@ -117,8 +118,9 @@ class DetailsScreen extends StatelessWidget {
   }
 
   _buildEndsDate() {
-    return BehaviorSubjectBuilder(
-      subject: $$endDate,
+    return StreamBuilder(
+      initialData: $$endDate.value,
+      stream: $$endDate.stream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return _buildDateItem(
           i18n("Ends"),

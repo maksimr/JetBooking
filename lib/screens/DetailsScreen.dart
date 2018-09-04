@@ -1,6 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jetbooking/components/BehaviorSubjectBuilder.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:jetbooking/components/Accordion.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
 import 'package:jetbooking/components/TimePicker.dart';
@@ -9,20 +10,15 @@ import 'package:jetbooking/i18n.dart';
 
 class DetailsScreen extends StatelessWidget {
   final DateTime date;
-  final DateTime initialStartDate;
-  final DateTime initialEndDate;
-  final bool initialHasTv;
-  final StreamController<DateTime> startDateStreamCtrl;
-  final StreamController<DateTime> endDateStreamCtrl;
-  final StreamController<bool> hasTvStreamCtrl;
+  final BehaviorSubject<DateTime> $$startDate;
+  final BehaviorSubject<DateTime> $$endDate;
+  final BehaviorSubject<bool> $$hasTv;
 
   DetailsScreen({@required this.date, Key key})
-      : startDateStreamCtrl = StreamController.broadcast(),
-        endDateStreamCtrl = StreamController.broadcast(),
-        hasTvStreamCtrl = StreamController.broadcast(),
-        initialStartDate = date,
-        initialEndDate = date.add(Duration(minutes: 30)),
-        initialHasTv = false,
+      : $$startDate = BehaviorSubject<DateTime>(seedValue: date),
+        $$endDate = BehaviorSubject<DateTime>(
+            seedValue: date.add(Duration(minutes: 30))),
+        $$hasTv = BehaviorSubject<bool>(seedValue: false),
         super();
 
   @override
@@ -50,19 +46,16 @@ class DetailsScreen extends StatelessWidget {
           ].map((it) => _withDivider(it)).toList(),
         ),
         Expanded(
-          child: StreamBuilder(
-            initialData: initialHasTv,
-            stream: hasTvStreamCtrl.stream,
+          child: BehaviorSubjectBuilder(
+            subject: $$hasTv,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               final hasTv = snapshot.data;
-              return StreamBuilder(
-                initialData: initialStartDate,
-                stream: startDateStreamCtrl.stream,
+              return BehaviorSubjectBuilder(
+                subject: $$startDate,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   final startDate = snapshot.data;
-                  return StreamBuilder(
-                    initialData: initialEndDate,
-                    stream: endDateStreamCtrl.stream,
+                  return BehaviorSubjectBuilder(
+                    subject: $$endDate,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       final endDate = snapshot.data;
                       return VacantRooms(
@@ -90,13 +83,12 @@ class DetailsScreen extends StatelessWidget {
   _buildOfflineRooms() {
     return AccordionPane(
       title: _buildTitle(i18n("Offline rooms")),
-      trailing: StreamBuilder(
-        initialData: initialHasTv,
-        stream: hasTvStreamCtrl.stream,
+      trailing: BehaviorSubjectBuilder(
+        subject: $$hasTv,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           final hasTv = snapshot.data;
           return Switch(
-            onChanged: (offline) => hasTvStreamCtrl.add(!offline),
+            onChanged: (offline) => $$hasTv.add(!offline),
             value: !hasTv,
           );
         },
@@ -115,14 +107,12 @@ class DetailsScreen extends StatelessWidget {
   }
 
   _buildStartsDate() {
-    return StreamBuilder(
-      initialData: initialEndDate,
-      stream: endDateStreamCtrl.stream,
+    return BehaviorSubjectBuilder(
+      subject: $$endDate,
       builder: (context, snapshot) {
         final endDate = snapshot.data;
-        return StreamBuilder(
-          initialData: initialStartDate,
-          stream: startDateStreamCtrl.stream,
+        return BehaviorSubjectBuilder(
+          subject: $$startDate,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             final startDate = snapshot.data;
             return _buildDateItem(
@@ -130,8 +120,8 @@ class DetailsScreen extends StatelessWidget {
               startDate,
               (date) {
                 final duration = endDate.difference(startDate);
-                startDateStreamCtrl.add(date);
-                endDateStreamCtrl.add(date.add(duration));
+                $$startDate.add(date);
+                $$endDate.add(date.add(duration));
               },
             );
           },
@@ -141,14 +131,13 @@ class DetailsScreen extends StatelessWidget {
   }
 
   _buildEndsDate() {
-    return StreamBuilder(
-      initialData: initialEndDate,
-      stream: endDateStreamCtrl.stream,
+    return BehaviorSubjectBuilder(
+      subject: $$endDate,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return _buildDateItem(
           i18n("Ends"),
           snapshot.data,
-          (date) => endDateStreamCtrl.add(date),
+          (date) => $$endDate.add(date),
         );
       },
     );

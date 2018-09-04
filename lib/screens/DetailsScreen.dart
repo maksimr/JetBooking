@@ -46,26 +46,17 @@ class DetailsScreen extends StatelessWidget {
           ].map((it) => _withDivider(it)).toList(),
         ),
         Expanded(
-          child: BehaviorSubjectBuilder(
-            subject: $$hasTv,
+          child: StreamBuilder(
+            stream: Observable.merge([
+              $$startDate.stream,
+              $$endDate.stream,
+              $$hasTv.stream,
+            ]),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              final hasTv = snapshot.data;
-              return BehaviorSubjectBuilder(
-                subject: $$startDate,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  final startDate = snapshot.data;
-                  return BehaviorSubjectBuilder(
-                    subject: $$endDate,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      final endDate = snapshot.data;
-                      return VacantRooms(
-                        hasTv: hasTv,
-                        startTime: startDate,
-                        endTime: endDate,
-                      );
-                    },
-                  );
-                },
+              return VacantRooms(
+                hasTv: $$hasTv.value,
+                startTime: $$startDate.value,
+                endTime: $$endDate.value,
               );
             },
           ),
@@ -108,22 +99,17 @@ class DetailsScreen extends StatelessWidget {
 
   _buildStartsDate() {
     return BehaviorSubjectBuilder(
-      subject: $$endDate,
-      builder: (context, snapshot) {
-        final endDate = snapshot.data;
-        return BehaviorSubjectBuilder(
-          subject: $$startDate,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            final startDate = snapshot.data;
-            return _buildDateItem(
-              i18n("Starts"),
-              startDate,
-              (date) {
-                final duration = endDate.difference(startDate);
-                $$startDate.add(date);
-                $$endDate.add(date.add(duration));
-              },
-            );
+      subject: $$startDate,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final startDate = snapshot.data;
+        return _buildDateItem(
+          i18n("Starts"),
+          startDate,
+          (date) {
+            final endDate = $$endDate.value;
+            final duration = endDate.difference(startDate);
+            $$startDate.add(date);
+            $$endDate.add(date.add(duration));
           },
         );
       },

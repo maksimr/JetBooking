@@ -128,10 +128,15 @@ void main() {
       rooms: rooms,
     )(() async {
       await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+      await eventFiring(tester);
       await waitWhenVacantRoomsAreLoaded(tester);
       expect(findVacantRooms(), findsNWidgets(rooms.length));
     });
   });
+}
+
+Future<Null> eventFiring(WidgetTester tester) async {
+  await tester.pump(Duration.zero);
 }
 
 findItem(text, [value]) {

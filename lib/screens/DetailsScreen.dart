@@ -5,6 +5,7 @@ import 'package:jetbooking/components/Accordion.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
 import 'package:jetbooking/components/TimePicker.dart';
 import 'package:jetbooking/components/VacantRooms.dart';
+import 'package:jetbooking/components/Empty.dart';
 import 'package:jetbooking/i18n.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -46,16 +47,18 @@ class DetailsScreen extends StatelessWidget {
         ),
         Expanded(
           child: StreamBuilder(
-            stream: Observable.merge([
+            stream: Observable.combineLatest3(
               $$startDate.stream,
               $$endDate.stream,
               $$hasTv.stream,
-            ]),
+              (startDate, endDate, hasTv) => [startDate, endDate, hasTv],
+            ),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) return Empty();
               return VacantRooms(
-                hasTv: $$hasTv.value,
-                startTime: $$startDate.value,
-                endTime: $$endDate.value,
+                startTime: snapshot.data[0],
+                endTime: snapshot.data[1],
+                hasTv: snapshot.data[2],
               );
             },
           ),

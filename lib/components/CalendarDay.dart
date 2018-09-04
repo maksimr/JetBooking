@@ -33,9 +33,12 @@ class CalendarDay extends StatelessWidget {
 
   Widget _buildInk(BuildContext context, child) {
     return onTap != null && date != null
-        ? InkWell(
+        ? RawMaterialButton(
+            constraints: const BoxConstraints(),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: CircleBorder(),
             child: child,
-            onTap: () => onTap(date),
+            onPressed: () => onTap(date),
           )
         : child;
   }

@@ -29,11 +29,12 @@ class InlineCalendar extends StatelessWidget {
   }
 
   _buildDay(DateTime dayDate) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return SizedBox(
+      width: 64.0,
       child: Center(
         child: Column(
           children: <Widget>[
+            Padding(padding: EdgeInsets.only(top: 16.0)),
             _buildWeekDayTitle(dayDate),
             Padding(padding: EdgeInsets.only(top: 8.0)),
             CalendarDay(

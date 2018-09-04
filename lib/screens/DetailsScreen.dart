@@ -36,7 +36,7 @@ class DetailsScreen extends StatelessWidget {
     return Flex(
       direction: Axis.vertical,
       children: [
-        InlineCalendar(date: date),
+        _buildInlineCalendar(),
         Accordion(
           children: [
             _buildStartsDate(),
@@ -46,24 +46,42 @@ class DetailsScreen extends StatelessWidget {
           ].map((it) => _withDivider(it)).toList(),
         ),
         Expanded(
-          child: StreamBuilder(
-            stream: Observable.combineLatest3(
-              $$startDate.stream,
-              $$endDate.stream,
-              $$hasTv.stream,
-              (startDate, endDate, hasTv) => [startDate, endDate, hasTv],
-            ),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData) return Empty();
-              return VacantRooms(
-                startTime: snapshot.data[0],
-                endTime: snapshot.data[1],
-                hasTv: snapshot.data[2],
-              );
-            },
-          ),
+          child: _buildRoomsList(),
         )
       ],
+    );
+  }
+
+  _buildRoomsList() {
+    return StreamBuilder(
+      stream: Observable.combineLatest3(
+        $$startDate.stream,
+        $$endDate.stream,
+        $$hasTv.stream,
+        (startDate, endDate, hasTv) => [startDate, endDate, hasTv],
+      ),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData) return Empty();
+        return VacantRooms(
+          startTime: snapshot.data[0],
+          endTime: snapshot.data[1],
+          hasTv: snapshot.data[2],
+        );
+      },
+    );
+  }
+
+  _buildInlineCalendar() {
+    return StreamBuilder(
+      initialData: $$startDate.value,
+      stream: $$startDate,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        final date = snapshot.data;
+        return InlineCalendar(
+          date: date,
+          onTap: _onChangeStartDate,
+        );
+      },
     );
   }
 
@@ -109,12 +127,7 @@ class DetailsScreen extends StatelessWidget {
         return _buildDateItem(
           i18n("Starts"),
           startDate,
-          (date) {
-            final endDate = $$endDate.value;
-            final duration = endDate.difference(startDate);
-            $$startDate.add(date);
-            $$endDate.add(date.add(duration));
-          },
+          _onChangeStartDate,
         );
       },
     );
@@ -180,6 +193,14 @@ class DetailsScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  _onChangeStartDate(date) {
+    final endDate = $$endDate.value;
+    final startDate = $$startDate.value;
+    final duration = endDate.difference(startDate);
+    $$startDate.add(date);
+    $$endDate.add(date.add(duration));
   }
 
   _buildTitle(text) {

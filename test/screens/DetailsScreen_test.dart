@@ -133,6 +133,40 @@ void main() {
       expect(findVacantRooms(), findsNWidgets(rooms.length));
     });
   });
+
+  testWidgets('should select date from inline calendar',
+      (WidgetTester tester) async {
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    final rooms = [];
+
+    createVacantRoomsRunZoneFor(
+      startTime: date.millisecondsSinceEpoch,
+      endTime: date.add(Duration(minutes: 30)).millisecondsSinceEpoch,
+      rooms: rooms,
+    )(() async {
+      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+      await eventFiring(tester);
+      await waitWhenVacantRoomsAreLoaded(tester);
+      expect(findVacantRooms(), findsNWidgets(rooms.length));
+
+      final newDate = date.add(Duration(days: 1));
+      final roomsForNewDate = [createRoomMock()];
+      await createVacantRoomsRunZoneFor(
+        startTime: newDate.millisecondsSinceEpoch,
+        endTime: newDate.add(Duration(minutes: 30)).millisecondsSinceEpoch,
+        rooms: roomsForNewDate,
+      )(() async {
+        await tester.tap(find.descendant(
+          of: find.byType(InlineCalendar),
+          matching: find.text(newDate.day.toString()),
+        ));
+
+        await eventFiring(tester);
+        await waitWhenVacantRoomsAreLoaded(tester);
+        expect(findVacantRooms(), findsNWidgets(roomsForNewDate.length));
+      });
+    });
+  });
 }
 
 Future<Null> eventFiring(WidgetTester tester) async {

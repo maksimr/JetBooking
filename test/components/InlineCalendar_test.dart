@@ -7,7 +7,7 @@ void main() {
   testWidgets('should create widget', (WidgetTester tester) async {
     final date = DateTime.now();
     await tester.pumpWidget(AppTheme(
-      child: InlineCalendar(date: date),
+      child: InlineCalendar(seedDate: date),
     ));
 
     expect(find.byType(InlineCalendar), findsOneWidget);
@@ -17,7 +17,19 @@ void main() {
     final date = DateTime.now();
     await tester.pumpWidget(AppTheme(
       child: InlineCalendar(
-        date: date,
+        seedDate: date,
+      ),
+    ));
+
+    expect(find.byType(CalendarDay), findsWidgets);
+  });
+
+  testWidgets('should allow set selected date', (WidgetTester tester) async {
+    final date = DateTime.now();
+    await tester.pumpWidget(AppTheme(
+      child: InlineCalendar(
+        seedDate: date,
+        date: date.add(Duration(days: 1)),
       ),
     ));
 

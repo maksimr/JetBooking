@@ -3,10 +3,17 @@ import 'package:jetbooking/components/CalendarDay.dart';
 import 'package:jetbooking/components/WeekDay.dart';
 
 class InlineCalendar extends StatelessWidget {
-  final DateTime date;
+  final DateTime seedDate;
   final Function(DateTime) onTap;
+  final DateTime date;
 
-  InlineCalendar({@required this.date, this.onTap});
+  InlineCalendar({
+    @required this.seedDate,
+    date,
+    this.onTap,
+    Key key,
+  })  : date = date ?? seedDate,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +22,7 @@ class InlineCalendar extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          return _buildDay(date.add(Duration(days: index)));
+          return _buildDay(seedDate.add(Duration(days: index)));
         },
       ),
     );
@@ -32,12 +39,18 @@ class InlineCalendar extends StatelessWidget {
             CalendarDay(
               onTap: onTap,
               date: dayDate,
-              selected: dayDate == date,
+              selected: _isEqual(dayDate, date),
             ),
           ],
         ),
       ),
     );
+  }
+
+  _isEqual(DateTime dateA, DateTime dateB) {
+    return (dateA.year == dateB.year &&
+        dateA.month == dateB.month &&
+        dateA.day == dateB.day);
   }
 
   _buildWeekDayTitle(DateTime dayDate) {

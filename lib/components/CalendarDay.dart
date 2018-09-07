@@ -20,7 +20,8 @@ class CalendarDay extends StatelessWidget {
 
     return _buildInk(
       context,
-      Container(
+      AnimatedContainer(
+        duration: Duration(milliseconds: selected ? 250 : 0),
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: selected ? mTheme.accentColor : null,

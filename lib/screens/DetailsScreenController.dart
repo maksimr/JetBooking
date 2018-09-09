@@ -36,7 +36,29 @@ class DetailsScreenController {
 
   get endDate => _endDateSubject.stream;
 
-  set endDate(value) => _endDateSubject.add(value);
+  set endDate(DateTime newEndDate) {
+    final currentStartDate = _startDateSubject.value;
+
+    if (newEndDate.isBefore(currentStartDate)) {
+      newEndDate = DateTime(
+        currentStartDate.year,
+        currentStartDate.month,
+        currentStartDate.day + 1,
+        newEndDate.hour,
+        newEndDate.minute,
+      );
+    } else if (newEndDate.difference(currentStartDate) > Duration(days: 1)) {
+      newEndDate = DateTime(
+        currentStartDate.year,
+        currentStartDate.month,
+        currentStartDate.day,
+        newEndDate.hour,
+        newEndDate.minute,
+      );
+    }
+
+    _endDateSubject.add(newEndDate);
+  }
 
   get hasTv => _hasTvSubject.stream;
 

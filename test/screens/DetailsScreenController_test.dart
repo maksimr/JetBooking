@@ -48,4 +48,46 @@ void main() {
     expect($ctrl.startDate, emitsInOrder([date]));
     expect($ctrl.endDate, emitsInOrder([newEndDate]));
   });
+
+  test(
+      'should automatically correct end date and move it to the next day if end date less than start date',
+      () {
+    final newEndDate = date.add(Duration(hours: -1));
+
+    $ctrl.endDate = newEndDate;
+
+    expect($ctrl.startDate, emitsInOrder([date]));
+    expect(
+        $ctrl.endDate,
+        emitsInOrder([
+          DateTime(
+            date.year,
+            date.month,
+            date.day + 1,
+            newEndDate.hour,
+            newEndDate.minute,
+          )
+        ]));
+  });
+
+  test(
+      'should automatically correct end date and move it to start day if diffirence between end and start dates more than one day',
+      () {
+    final newEndDate = date.add(Duration(days: 1, minutes: 30));
+
+    $ctrl.endDate = newEndDate;
+
+    expect($ctrl.startDate, emitsInOrder([date]));
+    expect(
+        $ctrl.endDate,
+        emitsInOrder([
+          DateTime(
+            date.year,
+            date.month,
+            date.day,
+            newEndDate.hour,
+            newEndDate.minute,
+          )
+        ]));
+  });
 }

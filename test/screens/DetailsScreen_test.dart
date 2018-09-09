@@ -31,6 +31,7 @@ void main() {
   testWidgets('should render start date item', (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     expect(findItem("Starts", "11:30"), findsOneWidget);
   });
@@ -38,6 +39,7 @@ void main() {
   testWidgets('should change start date item', (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     await tester.tap(findItem("Starts"));
     await tester.pump();
@@ -50,6 +52,7 @@ void main() {
   testWidgets('should render end date item', (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     expect(findItem("Ends", "12:00"), findsOneWidget);
   });
@@ -57,6 +60,7 @@ void main() {
   testWidgets('should change end date item', (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 00);
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     await tester.tap(findItem("Ends"));
     await tester.pump();
@@ -77,6 +81,7 @@ void main() {
       (WidgetTester tester) async {
     final date = DateTime.now();
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     expect(findItem("Offline rooms", null), findsOneWidget);
   });
@@ -85,6 +90,7 @@ void main() {
       (WidgetTester tester) async {
     final date = DateTime.now();
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     expect(
         find.descendant(
@@ -97,6 +103,7 @@ void main() {
   testWidgets('should render inline calendar', (WidgetTester tester) async {
     final date = DateTime.now();
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     expect(find.byType(InlineCalendar), findsOneWidget);
   });
@@ -106,11 +113,13 @@ void main() {
       (WidgetTester tester) async {
     final date = DateTime(2018, DateTime.june, 1, 11, 30);
     await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    await eventFiring(tester);
 
     await tester.tap(findItem("Starts"));
     await tester.pump();
 
     await jumpToDateTime(tester, hours: 12);
+    await eventFiring(tester);
 
     expect(findItem("Starts", "12:30"), findsOneWidget);
     expect(findItem("Ends", "13:00"), findsOneWidget);

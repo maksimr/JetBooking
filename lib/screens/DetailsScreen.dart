@@ -7,18 +7,13 @@ import 'package:jetbooking/components/TimePicker.dart';
 import 'package:jetbooking/components/VacantRooms.dart';
 import 'package:jetbooking/components/Empty.dart';
 import 'package:jetbooking/i18n.dart';
+import 'package:jetbooking/screens/DetailsScreenController.dart';
 
 class DetailsScreen extends StatelessWidget {
-  final DateTime date;
-  final BehaviorSubject<DateTime> $$startDate;
-  final BehaviorSubject<DateTime> $$endDate;
-  final BehaviorSubject<bool> $$hasTv;
+  final DetailsScreenController $ctrl;
 
-  DetailsScreen({@required this.date, Key key})
-      : $$startDate = BehaviorSubject<DateTime>(seedValue: date),
-        $$endDate = BehaviorSubject<DateTime>(
-            seedValue: date.add(Duration(minutes: 30))),
-        $$hasTv = BehaviorSubject<bool>(seedValue: false),
+  DetailsScreen({@required date, Key key})
+      : $ctrl = DetailsScreenController(date),
         super();
 
   @override
@@ -26,7 +21,7 @@ class DetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text(DateFormat.MMMM().format(date)),
+        title: Text(DateFormat.MMMM().format($ctrl.date)),
       ),
       body: _buildBody(),
     );
@@ -55,40 +50,40 @@ class DetailsScreen extends StatelessWidget {
   _buildRoomsList() {
     return StreamBuilder(
       stream: Observable.combineLatest3(
-        $$startDate.stream,
-        $$endDate.stream,
-        $$hasTv.stream,
+        $ctrl.startDate,
+        $ctrl.endDate,
+        $ctrl.hasTv,
         (startDate, endDate, hasTv) => [startDate, endDate, hasTv],
       ),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (!snapshot.hasData) return Empty();
+      builder: _reliableBuilder((BuildContext context, AsyncSnapshot snapshot) {
         return VacantRooms(
           startTime: snapshot.data[0],
           endTime: snapshot.data[1],
           hasTv: snapshot.data[2],
         );
-      },
+      }),
     );
   }
 
   _buildInlineCalendar() {
     return StreamBuilder(
-      initialData: $$startDate.value,
-      stream: $$startDate,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        final DateTime currentDate = snapshot.data;
-        return InlineCalendar(
-          seedDate: date,
-          date: currentDate,
-          onTap: (date) => _onChangeStartDate(DateTime(
-                date.year,
-                date.month,
-                date.day,
-                currentDate.hour,
-                currentDate.minute,
-              )),
-        );
-      },
+      stream: $ctrl.startDate,
+      builder: _reliableBuilder(
+        (BuildContext context, AsyncSnapshot snapshot) {
+          final DateTime currentDate = snapshot.data;
+          return InlineCalendar(
+            seedDate: $ctrl.date,
+            date: currentDate,
+            onTap: (date) => $ctrl.startDate = DateTime(
+                  date.year,
+                  date.month,
+                  date.day,
+                  currentDate.hour,
+                  currentDate.minute,
+                ),
+          );
+        },
+      ),
     );
   }
 
@@ -99,19 +94,21 @@ class DetailsScreen extends StatelessWidget {
   }
 
   _buildOfflineRooms() {
-    return AccordionPane(
-      title: _buildTitle(i18n("Offline rooms")),
-      trailing: StreamBuilder(
-        initialData: $$hasTv.value,
-        stream: $$hasTv.stream,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          final hasTv = snapshot.data;
-          return Switch(
-            onChanged: (offline) => $$hasTv.add(!offline),
+    return StreamBuilder(
+      stream: $ctrl.hasTv,
+      builder: _reliableBuilder((BuildContext context, AsyncSnapshot snapshot) {
+        final hasTv = snapshot.data;
+        return AccordionPane(
+          title: GestureDetector(
+            onTap: () => $ctrl.hasTv = !hasTv,
+            child: _buildTitle(i18n("Offline rooms")),
+          ),
+          trailing: Switch(
+            onChanged: (offline) => $ctrl.hasTv = !offline,
             value: !hasTv,
-          );
-        },
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -127,30 +124,25 @@ class DetailsScreen extends StatelessWidget {
 
   _buildStartsDate() {
     return StreamBuilder(
-      initialData: $$startDate.value,
-      stream: $$startDate.stream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
+      stream: $ctrl.startDate,
+      builder: _reliableBuilder((BuildContext context, AsyncSnapshot snapshot) {
         final startDate = snapshot.data;
         return _buildDateItem(
           i18n("Starts"),
           startDate,
-          _onChangeStartDate,
+          (date) => $ctrl.startDate = date,
         );
-      },
+      }),
     );
   }
 
   _buildEndsDate() {
     return StreamBuilder(
-      initialData: $$endDate.value,
-      stream: $$endDate.stream,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
+      stream: $ctrl.endDate,
+      builder: _reliableBuilder((BuildContext context, AsyncSnapshot snapshot) {
         return _buildDateItem(
-          i18n("Ends"),
-          snapshot.data,
-          (date) => $$endDate.add(date),
-        );
-      },
+            i18n("Ends"), snapshot.data, (date) => $ctrl.endDate = date);
+      }),
     );
   }
 
@@ -202,14 +194,6 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  _onChangeStartDate(date) {
-    final endDate = $$endDate.value;
-    final startDate = $$startDate.value;
-    final duration = endDate.difference(startDate);
-    $$startDate.add(date);
-    $$endDate.add(date.add(duration));
-  }
-
   _buildTitle(text) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -223,5 +207,12 @@ class DetailsScreen extends StatelessWidget {
 
   _buildDateText(date) {
     return Text(DateFormat.Hm().format(date));
+  }
+
+  AsyncWidgetBuilder _reliableBuilder(AsyncWidgetBuilder builder) {
+    return (BuildContext context, AsyncSnapshot snapshot) {
+      if (!snapshot.hasData) return Empty();
+      return builder(context, snapshot);
+    };
   }
 }

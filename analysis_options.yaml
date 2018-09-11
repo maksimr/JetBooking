@@ -1,0 +1,5 @@
+include: package:flutter/analysis_options_user.yaml
+
+analyzer:
+  exclude:
+    - "tool/flutter/**"

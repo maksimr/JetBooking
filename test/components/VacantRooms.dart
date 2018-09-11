@@ -8,8 +8,3 @@ findVacantRooms() {
     matching: find.byType(ListTile),
   );
 }
-
-waitWhenVacantRoomsAreLoaded(tester) async {
-  await (tester.widget(find.byType(FutureBuilder)) as FutureBuilder).future;
-  await tester.pumpAndSettle();
-}

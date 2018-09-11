@@ -1,4 +1,5 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:jetbooking/api/vc.dart';
 
 class DetailsScreenController {
   final DateTime date;
@@ -7,6 +8,7 @@ class DetailsScreenController {
   BehaviorSubject<DateTime> _endDateSubject;
   BehaviorSubject<bool> _hasTvSubject;
   BehaviorSubject<Duration> _durationSubject;
+  BehaviorSubject<List> _roomsSubject;
 
   DetailsScreenController(this.date) {
     _startDateSubject = BehaviorSubject<DateTime>(seedValue: date);
@@ -14,6 +16,7 @@ class DetailsScreenController {
     _hasTvSubject = BehaviorSubject<bool>(seedValue: false);
     _endDateSubject = BehaviorSubject<DateTime>(
         seedValue: _startDateSubject.value.add(_durationSubject.value));
+    _roomsSubject = BehaviorSubject<List>();
 
     startDate.withLatestFrom<Duration, DateTime>(
       _durationSubject.stream,
@@ -28,7 +31,25 @@ class DetailsScreenController {
         return endDate.difference(starDate);
       },
     ).listen((duration) => _durationSubject.add(duration));
+
+    _roomsSubject.addStream(Observable.combineLatest3(
+      startDate,
+      endDate,
+      hasTv,
+      (startDate, endDate, hasTv) => [startDate, endDate, hasTv],
+    ).switchMap((data) {
+      final DateTime startDate = data[0];
+      final DateTime endDate = data[1];
+      final bool hasTv = data[2];
+      return Observable.fromFuture(getVacantRooms(
+        startTime: startDate.millisecondsSinceEpoch,
+        endTime: endDate.millisecondsSinceEpoch,
+        hasTv: hasTv,
+      ));
+    }));
   }
+
+  get rooms => _roomsSubject.stream;
 
   get startDate => _startDateSubject.stream;
 

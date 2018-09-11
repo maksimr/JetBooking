@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:jetbooking/components/Accordion.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
 import 'package:jetbooking/components/TimePicker.dart';
@@ -49,19 +48,28 @@ class DetailsScreen extends StatelessWidget {
 
   _buildRoomsList() {
     return StreamBuilder(
-      stream: Observable.combineLatest3(
-        $ctrl.startDate,
-        $ctrl.endDate,
-        $ctrl.hasTv,
-        (startDate, endDate, hasTv) => [startDate, endDate, hasTv],
-      ),
+      stream: $ctrl.rooms,
       builder: _reliableBuilder((BuildContext context, AsyncSnapshot snapshot) {
-        return VacantRooms(
-          startTime: snapshot.data[0],
-          endTime: snapshot.data[1],
-          hasTv: snapshot.data[2],
-        );
+        if (snapshot.hasError) return _buildErrorMessage(context, snapshot);
+        final List rooms = snapshot.data;
+        return VacantRooms(rooms: rooms);
       }),
+    );
+  }
+
+  _buildErrorMessage(context, AsyncSnapshot snapshot) {
+    final mTheme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: Text(
+          "${snapshot.error}",
+          style: TextStyle(
+            fontSize: 18.0,
+            color: mTheme.errorColor,
+          ),
+        ),
+      ),
     );
   }
 

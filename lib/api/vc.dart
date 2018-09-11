@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 
 getRooms() async => vcRequest<List>("getRooms");
 
-getVacantRooms({
+Future<List> getVacantRooms({
   @required int startTime,
   @required int endTime,
   bool hasTv = false,

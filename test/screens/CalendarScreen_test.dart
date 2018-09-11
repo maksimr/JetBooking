@@ -6,6 +6,8 @@ import 'package:jetbooking/components/CalendarMonth.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
 import 'package:jetbooking/screens/CalendarScreen.dart';
 
+import '../http.dart';
+
 void main() {
   testWidgets('should create screen', (WidgetTester tester) async {
     await tester.pumpWidget(AppTheme(
@@ -25,16 +27,17 @@ void main() {
 
   testWidgets('should open booking details screen when user tap on a day',
       (WidgetTester tester) async {
-    final date = DateTime(2018, DateTime.july);
+    dumbZone(() async {
+      final date = DateTime(2018, DateTime.july);
+      await tester.pumpWidget(AppTheme(
+        child: CalendarScreen(date: date),
+      ));
 
-    await tester.pumpWidget(AppTheme(
-      child: CalendarScreen(date: date),
-    ));
+      await tapOnDate(tester, date);
+      await tester.pumpAndSettle();
 
-    await tapOnDate(tester, date);
-    await tester.pumpAndSettle();
-
-    expect(find.byType(DetailsScreen), findsOneWidget);
+      expect(find.byType(DetailsScreen), findsOneWidget);
+    });
   });
 }
 

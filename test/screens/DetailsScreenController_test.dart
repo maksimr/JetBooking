@@ -1,5 +1,9 @@
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:jetbooking/screens/DetailsScreenController.dart';
+
+import '../http.dart';
+import '../api/vc.dart';
 
 void main() {
   DateTime date;
@@ -7,7 +11,7 @@ void main() {
 
   setUp(() {
     date = DateTime(2018, 1, 1, 11, 30);
-    $ctrl = DetailsScreenController(date);
+    dumbZone(() => $ctrl = DetailsScreenController(date));
   });
 
   test('should create controller', () {
@@ -89,5 +93,18 @@ void main() {
             newEndDate.minute,
           )
         ]));
+  });
+
+  test('should load vacant rooms', () {
+    runHttpZoned((client) {
+      final startTime = date;
+      final endTime = startTime.add(Duration(minutes: 30));
+      final rooms = [createRoomMock()];
+
+      when(client.getUrl(vcVacantRoomsUrlFor(startTime, endTime)))
+          .thenAnswer(responseMock(rooms));
+
+      expect(DetailsScreenController(date).rooms, emitsInOrder([rooms]));
+    });
   });
 }

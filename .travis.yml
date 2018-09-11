@@ -11,10 +11,11 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_script:
-        - git clone https://github.com/flutter/flutter.git -b beta --depth 1
-        - ./flutter/bin/flutter doctor
+        - git clone https://github.com/flutter/flutter.git -b beta --depth 1 .pub/flutter
+        - ./.pub/flutter/bin/flutter doctor
       script:
-        - ./flutter/bin/flutter test
+        - ./.pub/flutter/bin/flutter analyze
+        - ./.pub/flutter/bin/flutter test
 
     - os: osx
       language: generic

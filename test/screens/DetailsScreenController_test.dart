@@ -102,7 +102,7 @@ void main() {
       final rooms = [createRoomMock()];
 
       when(client.getUrl(vcVacantRoomsUrlFor(startTime, endTime)))
-          .thenAnswer(responseMock(rooms));
+          .thenAnswer(response(toJson(rooms)));
 
       expect(DetailsScreenController(date).rooms, emitsInOrder([rooms]));
     });

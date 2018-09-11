@@ -157,7 +157,7 @@ void main() {
       final rooms = [createRoomMock()];
 
       when(client.getUrl(vcVacantRoomsUrlFor(startTime, endTime)))
-          .thenAnswer(responseMock(rooms));
+          .thenAnswer(response(toJson(rooms)));
 
       await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
       await eventFiring(tester);
@@ -173,12 +173,12 @@ void main() {
       final date = DateTime(2018, DateTime.june, 1, 11, 30);
       final rooms = [];
       when(client.getUrl(vcVacantRoomsUrlFor(date, date.add(duration))))
-          .thenAnswer(responseMock(rooms));
+          .thenAnswer(response(toJson(rooms)));
 
       final newDate = date.add(Duration(days: 1));
       final roomsForNewDate = [createRoomMock()];
       when(client.getUrl(vcVacantRoomsUrlFor(newDate, newDate.add(duration))))
-          .thenAnswer(responseMock(roomsForNewDate));
+          .thenAnswer(response(toJson(roomsForNewDate)));
 
       await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
       await eventFiring(tester);

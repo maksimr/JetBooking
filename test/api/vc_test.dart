@@ -8,7 +8,7 @@ void main() {
   test('should return list of rooms', () {
     runHttpZoned((client) async {
       when(client.getUrl(vcUrl("getRooms")))
-          .thenAnswer(responseMock([createRoomMock()]));
+          .thenAnswer(response(toJson([createRoomMock()])));
       final List data = await getRooms();
       expect(data.length, 1);
     });
@@ -20,7 +20,7 @@ void main() {
       final endTime = DateTime(2018, 1, 1, 2, 30);
 
       when(client.getUrl(vcVacantRoomsUrlFor(startTime, endTime)))
-          .thenAnswer(responseMock([createRoomMock()]));
+          .thenAnswer(response(toJson([createRoomMock()])));
 
       final List data = await getVacantRooms(
         startTime: startTime.millisecondsSinceEpoch,
@@ -36,7 +36,7 @@ void main() {
       final endTime = DateTime(2018, 1, 1, 2, 30);
 
       when(client.getUrl(vcVacantRoomsUrlFor(startTime, endTime, hasTv: true)))
-          .thenAnswer(responseMock([createRoomMock()]));
+          .thenAnswer(response(toJson([createRoomMock()])));
 
       final List data = await getVacantRooms(
           startTime: startTime.millisecondsSinceEpoch,

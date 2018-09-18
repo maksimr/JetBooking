@@ -1,6 +1,6 @@
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-import 'package:jetbooking/screens/DetailsScreenController.dart';
+import 'package:jetbooking/controllers/DetailsScreenController.dart';
 
 import '../http.dart';
 import '../api/vc.dart';

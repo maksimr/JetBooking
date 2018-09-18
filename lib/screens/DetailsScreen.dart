@@ -6,13 +6,13 @@ import 'package:jetbooking/components/TimePicker.dart';
 import 'package:jetbooking/components/VacantRooms.dart';
 import 'package:jetbooking/components/Empty.dart';
 import 'package:jetbooking/i18n.dart';
-import 'package:jetbooking/screens/DetailsScreenController.dart';
+import 'package:jetbooking/controllers/DetailsScreenController.dart';
 
 class DetailsScreen extends StatelessWidget {
   final DetailsScreenController $ctrl;
 
-  DetailsScreen({@required date, Key key})
-      : $ctrl = DetailsScreenController(date),
+  DetailsScreen({@required date, Key key, DetailsScreenController ctrl})
+      : $ctrl = ctrl ?? DetailsScreenController(date),
         super();
 
   @override

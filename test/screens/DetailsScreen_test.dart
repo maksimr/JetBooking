@@ -1,212 +1,209 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/InlineCalendar.dart';
+import 'package:jetbooking/controllers/DetailsScreenController.dart';
 import 'package:jetbooking/screens/DetailsScreen.dart';
 import 'package:mockito/mockito.dart';
-
-import '../http.dart';
 import '../api/vc.dart';
 import '../components/TimePicker.dart';
 import '../components/VacantRooms.dart';
 
 void main() {
   testWidgets('should create screen', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime.now();
-      await tester.pumpWidget(AppTheme(
-        child: DetailsScreen(date: date),
-      ));
+    final date = DateTime.now();
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      expect(find.byType(DetailsScreen), findsOneWidget);
-    });
+    expect(find.byType(DetailsScreen), findsOneWidget);
   });
 
   testWidgets('should render app bar', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime.now();
-      await tester.pumpWidget(AppTheme(
-        child: DetailsScreen(date: date),
-      ));
+    final date = DateTime.now();
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      expect(find.byType(AppBar), findsOneWidget);
-    });
+    expect(find.byType(AppBar), findsOneWidget);
   });
 
   testWidgets('should render start date item', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime(2018, DateTime.june, 1, 11, 30);
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
+    ctrl.startDate = date;
+    await eventFiring(tester);
 
-      expect(findItem("Starts", "11:30"), findsOneWidget);
-    });
+    expect(findItem("Starts", "11:30"), findsOneWidget);
   });
 
   testWidgets('should change start date item', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime(2018, DateTime.june, 1, 11, 30);
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      await tester.tap(findItem("Starts"));
-      await tester.pump();
+    ctrl.startDate = date;
+    await eventFiring(tester);
 
-      await jumpToDateTime(tester, hours: 12);
+    await tester.tap(findItem("Starts"));
+    await tester.pump();
 
-      expect(findItem("Starts", "12:30"), findsOneWidget);
-    });
+    await jumpToDateTime(tester, hours: 12);
+
+    expect(findItem("Starts", "12:30"), findsOneWidget);
   });
 
   testWidgets('should render end date item', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime(2018, DateTime.june, 1, 11, 30);
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      expect(findItem("Ends", "12:00"), findsOneWidget);
-    });
+    ctrl.endDate = date.add(Duration(minutes: 30));
+    await eventFiring(tester);
+
+    expect(findItem("Ends", "12:00"), findsOneWidget);
   });
 
   testWidgets('should change end date item', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime(2018, DateTime.june, 1, 11, 00);
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime(2018, DateTime.june, 1, 11, 00);
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      await tester.tap(findItem("Ends"));
-      await tester.pump();
+    ctrl.endDate = date.add(Duration(minutes: 30));
+    await eventFiring(tester);
 
-      await jumpToDateTime(tester, hours: 12);
+    await tester.tap(findItem("Ends"));
+    await tester.pump();
 
-      expect(findItem("Ends", "12:30"), findsOneWidget);
-    });
+    await jumpToDateTime(tester, hours: 12);
+
+    expect(findItem("Ends", "12:30"), findsOneWidget);
   });
 
   testWidgets('should render recurring item', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime.now();
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
+    final date = DateTime.now();
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      expect(findItem("Recurring", null), findsOneWidget);
-    });
+    expect(findItem("Recurring", null), findsOneWidget);
   });
 
   testWidgets('should render offline rooms control',
       (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime.now();
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime.now();
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      expect(findItem("Offline rooms", null), findsOneWidget);
-    });
+    ctrl.hasTv = false;
+    await eventFiring(tester);
+
+    expect(findItem("Offline rooms", null), findsOneWidget);
   });
 
   testWidgets('should render month in the app bar',
       (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime.now();
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime.now();
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
+    await eventFiring(tester);
 
-      expect(
-          find.descendant(
-            of: find.byType(AppBar),
-            matching: find.text(DateFormat.MMMM().format(date)),
-          ),
-          findsOneWidget);
-    });
+    expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text(DateFormat.MMMM().format(date)),
+        ),
+        findsOneWidget);
+  });
+
+  testWidgets('should render rooms list', (WidgetTester tester) async {
+    final date = DateTime.now();
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
+
+    ctrl.rooms = [createRoomMock()];
+    await eventFiring(tester);
+
+    expect(findVacantRooms(), findsOneWidget);
   });
 
   testWidgets('should render inline calendar', (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime.now();
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime.now();
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      expect(find.byType(InlineCalendar), findsOneWidget);
-    });
-  });
+    ctrl.startDate = date;
+    await eventFiring(tester);
 
-  testWidgets(
-      'should automaticaly change end time when user change start time to keep duration',
-      (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime(2018, DateTime.june, 1, 11, 30);
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
-
-      await tester.tap(findItem("Starts"));
-      await tester.pump();
-
-      await jumpToDateTime(tester, hours: 12);
-      await eventFiring(tester);
-
-      expect(findItem("Starts", "12:30"), findsOneWidget);
-      expect(findItem("Ends", "13:00"), findsOneWidget);
-    });
-  });
-
-  testWidgets('should render rooms', (WidgetTester tester) async {
-    runHttpZoned((client) async {
-      final date = DateTime(2018, DateTime.june, 1, 11, 30);
-      final startTime = date;
-      final endTime = date.add(Duration(minutes: 30));
-      final rooms = [createRoomMock()];
-
-      when(client.getUrl(vcVacantRoomsUrlFor(startTime, endTime)))
-          .thenAnswer(response(toJson(rooms)));
-
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
-      expect(findVacantRooms(), findsNWidgets(rooms.length));
-    });
+    expect(find.byType(InlineCalendar), findsOneWidget);
   });
 
   testWidgets('should select date from inline calendar',
       (WidgetTester tester) async {
-    runHttpZoned((client) async {
-      final duration = Duration(minutes: 30);
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    final newDate = date.add(Duration(days: 1));
+    final ctrl = DetailsScreenControllerMock(date);
 
-      final date = DateTime(2018, DateTime.june, 1, 11, 30);
-      final rooms = [];
-      when(client.getUrl(vcVacantRoomsUrlFor(date, date.add(duration))))
-          .thenAnswer(response(toJson(rooms)));
+    expect(ctrl.startDate, emitsInOrder([date, newDate]));
 
-      final newDate = date.add(Duration(days: 1));
-      final roomsForNewDate = [createRoomMock()];
-      when(client.getUrl(vcVacantRoomsUrlFor(newDate, newDate.add(duration))))
-          .thenAnswer(response(toJson(roomsForNewDate)));
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
-      expect(findVacantRooms(), findsNWidgets(rooms.length));
-
-      await tapOnDayInCalendar(tester, newDate);
-      await eventFiring(tester);
-      expect(findVacantRooms(), findsNWidgets(roomsForNewDate.length));
-    });
-  });
+    ctrl.startDate = date;
+    await eventFiring(tester);
+    await tapOnDayInCalendar(tester, newDate);
+  }, timeout: Timeout(Duration(milliseconds: 10)));
 
   testWidgets(
       'should preserve hours and minutes when change date by inline calendar',
       (WidgetTester tester) async {
-    dumbZone(() async {
-      final date = DateTime(2018, DateTime.june, 1, 11, 30);
-      await tester.pumpWidget(AppTheme(child: DetailsScreen(date: date)));
-      await eventFiring(tester);
+    final date = DateTime(2018, DateTime.june, 1, 11, 30);
+    final ctrl = DetailsScreenControllerMock(date);
+    await tester.pumpWidget(AppTheme(
+      child: DetailsScreen(date: date, ctrl: ctrl),
+    ));
 
-      await tester.tap(findItem("Starts"));
-      await tester.pump();
-      await jumpToDateTime(tester, hours: 12);
+    expect(
+        ctrl.startDate,
+        emitsInOrder([
+          date,
+          date.add(Duration(hours: 1)),
+          date.add(Duration(days: 1, hours: 1)),
+        ]));
 
-      await tapOnDayInCalendar(tester, date.add(Duration(days: 1)));
-      await eventFiring(tester);
-      expect(findItem("Starts", "12:30"), findsOneWidget);
-    });
-  });
+    ctrl.startDate = date;
+    await eventFiring(tester);
+
+    await tester.tap(findItem("Starts"));
+    await tester.pump();
+    await jumpToDateTime(tester, hours: 12);
+
+    await tapOnDayInCalendar(tester, date.add(Duration(days: 1)));
+    await eventFiring(tester);
+  }, timeout: Timeout(Duration(milliseconds: 10)));
 }
 
 eventFiring(WidgetTester tester) async {
@@ -234,4 +231,31 @@ findItemByText(text) {
     of: find.text(text),
     matching: find.byType(ListTile),
   );
+}
+
+class DetailsScreenControllerMock extends Mock
+    implements DetailsScreenController {
+  DetailsScreenControllerMock(this.date);
+
+  final date;
+  final startDateCtrl = StreamController.broadcast();
+  final endDateCtrl = StreamController.broadcast();
+  final roomsCtrl = StreamController.broadcast();
+  final hasTvCtrl = StreamController.broadcast();
+
+  get startDate => startDateCtrl.stream;
+
+  get endDate => endDateCtrl.stream;
+
+  get rooms => roomsCtrl.stream;
+
+  get hasTv => hasTvCtrl.stream;
+
+  set startDate(value) => startDateCtrl.add(value);
+
+  set endDate(value) => endDateCtrl.add(value);
+
+  set rooms(value) => roomsCtrl.add(value);
+
+  set hasTv(value) => hasTvCtrl.add(value);
 }

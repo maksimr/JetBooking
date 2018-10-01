@@ -22,7 +22,7 @@ matrix:
       osx_image: xcode9.4
       before_install:
         - export HOMEBREW_NO_AUTO_UPDATE=1
-        - brew install --HEAD libimobiledevice
+        - brew install libimobiledevice
         - brew install ideviceinstaller
         - brew install ios-deploy
         - pip install six

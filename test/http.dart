@@ -25,7 +25,7 @@ response(String data, [statusCode = 200]) {
     when(response.statusCode).thenAnswer((_) => statusCode);
     when(response.transform(any)).thenAnswer((invocation) {
       final decoder = invocation.positionalArguments[0];
-      return Stream.fromFuture<List<int>>(Future.value(utf8.encode(data)))
+      return Stream.fromFuture(Future.value(utf8.encode(data)))
           .transform(decoder);
     });
     return Future.value(request);

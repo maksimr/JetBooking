@@ -21,19 +21,29 @@ void main() {
 
   testWidgets('should render hours', (WidgetTester tester) async {
     await tester.pumpWidget(AppTheme(
-      child: TimePicker(),
+      child: UnconstrainedBox(
+        child: ConstrainedBox(
+          constraints: BoxConstraints.tightFor(height: 30 * 24.0, width: 20.0),
+          child: TimePicker(),
+        ),
+      ),
     ));
 
-    expect(find.byType(TimePickerHourItem), findsNWidgets(24));
+    expect(find.byType(TimePickerHourItem), findsNWidgets(25));
   });
 
   testWidgets('should render minutes with 5 min interval',
       (WidgetTester tester) async {
     await tester.pumpWidget(AppTheme(
-      child: TimePicker(),
+      child: UnconstrainedBox(
+        child: ConstrainedBox(
+          constraints: BoxConstraints.tightFor(height: 30 * 12.0, width: 20.0),
+          child: TimePicker(),
+        ),
+      ),
     ));
 
-    expect(find.byType(TimePickerMinItem), findsNWidgets(12));
+    expect(find.byType(TimePickerMinItem), findsNWidgets(13));
   });
 
   testWidgets('should change hour', (WidgetTester tester) async {

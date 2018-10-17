@@ -46,4 +46,29 @@ void main() {
 
     expect(selectedIndex, 1);
   });
+
+  testWidgets('should render looping items', (WidgetTester tester) async {
+    await tester.pumpWidget(AppTheme(
+      child: UnconstrainedBox(
+        child: ConstrainedBox(
+          constraints: BoxConstraints.tightFor(height: 60.0, width: 20.0),
+          child: PickerView(
+            itemExtent: 20.0,
+            children: [Text("A"), Text("B")],
+            onSelectedItemChanged: null,
+            childLooping: true,
+          ),
+        ),
+      ),
+    ));
+
+    // It should repeat [B] element at the top (infinity loop)
+    //---------
+    //  [ B ]
+    //->[ A ]<-
+    //  [ B ]
+    //---------
+    expect(find.text("A"), findsOneWidget);
+    expect(find.text("B"), findsNWidgets(2));
+  });
 }

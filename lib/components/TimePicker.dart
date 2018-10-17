@@ -81,6 +81,7 @@ class TimePickerState extends State<TimePicker> {
       perspective: 0.000001,
       initialItem: initialItem,
       children: children,
+      childLooping: true,
       itemExtent: widget.itemExtent,
       onSelectedItemChanged: onSelectedDateChanged,
     );

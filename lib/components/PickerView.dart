@@ -7,6 +7,7 @@ class PickerView extends StatelessWidget {
   final double itemExtent;
   final FixedExtentScrollController controller;
   final double perspective;
+  final bool childLooping;
 
   PickerView({
     @required this.itemExtent,
@@ -14,18 +15,21 @@ class PickerView extends StatelessWidget {
     @required this.onSelectedItemChanged,
     this.perspective,
     this.controller,
+    this.childLooping = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListWheelScrollView(
+    return ListWheelScrollView.useDelegate(
       diameterRatio: 1.0,
       physics: const FixedExtentScrollPhysics(),
       perspective: perspective ?? RenderListWheelViewport.defaultPerspective,
       controller: controller,
       itemExtent: itemExtent,
-      children: children,
       onSelectedItemChanged: onSelectedItemChanged,
+      childDelegate: childLooping
+          ? ListWheelChildLoopingListDelegate(children: children)
+          : ListWheelChildListDelegate(children: children),
     );
   }
 }

@@ -8,6 +8,7 @@ class Picker extends StatelessWidget {
   final perspective;
   final int initialItem;
   final FixedExtentScrollController controller;
+  final bool childLooping;
 
   Picker({
     Key key,
@@ -16,6 +17,7 @@ class Picker extends StatelessWidget {
     this.initialItem,
     this.onSelectedItemChanged,
     this.perspective,
+    this.childLooping = false,
   })  : controller = FixedExtentScrollController(initialItem: initialItem ?? 0),
         super(key: key);
 
@@ -26,6 +28,7 @@ class Picker extends StatelessWidget {
       controller: controller,
       children: children,
       perspective: perspective,
+      childLooping: childLooping,
       onSelectedItemChanged: onSelectedItemChanged,
     );
   }

@@ -168,7 +168,7 @@ class _ExpansionTileState extends State<_ExpansionItem>
       if (value)
         _controller.forward();
       else
-        _controller.reverse().then<void>((Null value) {
+        _controller.reverse().then<void>((value) {
           setState(() {
             // Rebuild without widget.children.
           });
@@ -197,8 +197,7 @@ class _ExpansionTileState extends State<_ExpansionItem>
               onTap: _handleTap,
               leading: widget.leading,
               title: new DefaultTextStyle(
-                style: Theme
-                    .of(context)
+                style: Theme.of(context)
                     .textTheme
                     .subhead
                     .copyWith(color: titleColor),

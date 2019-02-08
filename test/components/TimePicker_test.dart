@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jetbooking/components/AppTheme.dart';
 import 'package:jetbooking/components/TimePicker.dart';
@@ -7,8 +8,10 @@ import 'TimePicker.dart';
 
 void main() {
   setUp(() {
-    WidgetsBinding.instance.renderView.configuration =
-        new TestViewConfiguration(size: const Size(1200.0, 1980.0));
+    WidgetsBinding.instance.renderView.configuration = TestViewConfiguration(
+      size: const Size(1200.0, 1980.0),
+      window: RendererBinding.instance.window,
+    );
   });
 
   testWidgets('should create widget', (WidgetTester tester) async {

@@ -44,6 +44,7 @@ class _AccordionState extends State<Accordion> {
               }
               return true;
             }
+            return false;
           },
         );
       }),

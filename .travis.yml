@@ -29,7 +29,7 @@ matrix:
         - ./tool/setup.sh
       script:
         - source ./tool/env.sh
-        - xcrun simctl boot "iPhone 7"
+        - xcrun simctl boot "iPhone 8"
         - flutter drive --target=test_driver/main.dart
 cache:
   directories:

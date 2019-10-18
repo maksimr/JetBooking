@@ -12,8 +12,8 @@ case "$(uname -s)" in
   *)
     # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6
     # version GLIBCXX_3.4.18
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-    sudo apt-get update
-    sudo apt-get install libstdc++6
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    sudo apt-get update -y
+    sudo apt-get install -y libstdc++6
     ;;
 esac

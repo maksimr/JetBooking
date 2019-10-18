@@ -1,24 +1,18 @@
 name: Flutter
-
 on: [push]
-
 jobs:
   build:
-    
     runs-on: ubuntu-latest
-        
     steps:
-    - uses: actions/checkout@v1
-      
-    - name: Install flutter dependencies  
-      run: |
-        add-apt-repository ppa:ubuntu-toolchain-r/test
-        apt-get update
-        apt-get install libstdc++6
-              
-    - name: Run tests
-      run: |
-        ./tool/setup.sh
-        source ./tool/env.sh
-        flutter analyze
-        flutter test
+      - uses: actions/checkout@v1
+      - name: Install flutter dependencies
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install libstdc++6
+      - name: Run tests
+        run: |
+          ./tool/setup.sh
+          source ./tool/env.sh
+          flutter analyze
+          flutter test

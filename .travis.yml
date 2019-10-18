@@ -1,14 +1,9 @@
 matrix:
   include:
     - os: linux
-      sudo: false
-      addons:
-        apt:
-          # Flutter depends on /usr/lib/x86_64-linux-gnu/libstdc++.so.6 version GLIBCXX_3.4.18
-          sources:
-            - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
-          packages:
-            - libstdc++6
+      sudo: true
+      before_install:
+        - ./tool/install.sh
       before_script:
         - ./tool/setup.sh
       script:
@@ -20,11 +15,7 @@ matrix:
       language: generic
       osx_image: xcode11.1
       before_install:
-        - export HOMEBREW_NO_AUTO_UPDATE=1
-        - brew install libimobiledevice
-        - brew install ideviceinstaller
-        - brew install ios-deploy
-        - pip install six
+        - ./tool/install.sh
       before_script:
         - ./tool/setup.sh
       script:

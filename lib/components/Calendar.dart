@@ -59,7 +59,7 @@ class Calendar extends StatelessWidget {
                       child: WeekDay(
                         weekday: weekDayIndex + 1,
                         style: TextStyle(
-                          color: mTheme.accentTextTheme.title.color,
+                          color: mTheme.accentTextTheme.headline6.color,
                           fontSize: 8.0,
                         ),
                       ),

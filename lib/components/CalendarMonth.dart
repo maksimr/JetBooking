@@ -85,7 +85,7 @@ class CalendarMonthTitle extends StatelessWidget {
       child: Text(
         formatDate(date),
         textAlign: TextAlign.right,
-        style: Theme.of(context).textTheme.headline,
+        style: Theme.of(context).textTheme.headline5,
       ),
     );
   }

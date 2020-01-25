@@ -60,11 +60,11 @@ class CalendarDay extends StatelessWidget {
     final mTheme = Theme.of(context);
 
     if (selected) {
-      return mTheme.accentTextTheme.title.color;
+      return mTheme.accentTextTheme.headline6.color;
     }
 
     return (date != null && date.weekday > 5)
         ? mTheme.disabledColor
-        : mTheme.textTheme.body1.color;
+        : mTheme.textTheme.bodyText1.color;
   }
 }

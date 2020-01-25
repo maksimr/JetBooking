@@ -169,7 +169,7 @@ class DetailsScreen extends StatelessWidget {
         return Material(
           color: mTheme.primaryColor,
           textStyle: TextStyle(
-            color: mTheme.primaryTextTheme.body2.color,
+            color: mTheme.primaryTextTheme.bodyText1.color,
           ),
           child: SizedBox(
             height: 130.0,
@@ -207,7 +207,7 @@ class DetailsScreen extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         return Text(
           text,
-          style: Theme.of(context).textTheme.headline,
+          style: Theme.of(context).textTheme.headline5,
         );
       },
     );
